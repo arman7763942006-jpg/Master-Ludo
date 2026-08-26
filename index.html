@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Ludo - All Games</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 10px; text-align: center; }
+        .wallet-header { display: flex; justify-content: space-around; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 10px; }
+        .balance-card { font-size: 12px; }
+        .balance-amount { font-size: 16px; font-weight: bold; color: #22c55e; margin-top: 2px; }
+        .winning-amount { color: #eab308; }
+        .menu-bar { display: flex; justify-content: center; gap: 4px; margin-bottom: 15px; flex-wrap: wrap; }
+        .tab-btn { background: #334155; color: #fff; border: none; padding: 7px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .tab-btn.active { background: #2563eb; }
+        .game-section { display: none; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .game-section.active { display: block; }
+        .btn { background: #2563eb; color: #fff; border: none; padding: 8px 15px; font-size: 14px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-cashout { background: #eab308; color: #000; }
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-width: 250px; margin: 10px auto; }
+        .grid-box { width: 45px; height: 45px; background: #334155; border: none; border-radius: 5px; font-size: 16px; color: #fff; cursor: pointer; }
+        .grid-box.open-safe { background: #15803d; }
+        .grid-box.open-mine { background: #b91c1c; }
+        .withdraw-box { background: #1e293b; padding: 10px; border-radius: 8px; text-align: left; font-size: 13px; }
+        select, input { width: 95%; padding: 6px; margin: 3px 0 8px 0; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="wallet-header">
+        <div class="balance-card"><div>💳 डिपॉजिट (₹)</div><div class="balance-amount" id="depBalance">500</div></div>
+        <div class="balance-card"><div>🏆 जीत बैलेंस (₹)</div><div class="balance-amount winning-amount" id="winBalance">0</div></div>
+    </div>
+    <div class="menu-bar">
+        <button class="tab-btn active" onclick="switchGame('ludo')">🎲 Ludo</button>
+        <button class="tab-btn" onclick="switchGame('aviator')">🚀 Aviator</button>
+        <button class="tab-btn" onclick="switchGame('mines')">💣 Mines</button>
+        <button class="tab-btn" onclick="switchGame('color')">🎨 Color</button>
+    </div>
+    <div id="ludo" class="game-section active">
+        <h3>⏱️ Zupee Style Ludo (Timer & Battle)</h3>
+        <div style="text-align: left; font-size: 13px; margin-bottom: 10px;">
+            <label>एंट्री फीस चुनें:</label>
+            <select id="ludoFee"><option value="1">₹1 Match</option><option value="5">₹5 Match</option><option value="10">₹10 Match</option><option value="20" selected>₹20 Match</option><option value="35">₹35 Match</option><option value="50">₹50 Match</option><option value="75">₹75 Match</option><option value="100">₹100 Match</option></select>
+            <label>गेम मोड चुनें:</label>
+            <select id="ludoMode"><option value="1v1">1 v 1 (2 Players)</option><option value="2v2">2 v 2 (4 Players)</option><option value="4v4">4 v 4 (Battle)</option></select>
+        </div>
+        <button class="btn" onclick="startLudoMatch()" id="ludoStartBtn">🎮 मैच शुरू करें</button>
+        <div id="ludoArea" style="display:none; margin-top: 10px;">
+            <p>मैच का समय: <span id="ludoTimer" style="color: #22c55e; font-weight: bold;">03:00</span></p>
+            <p>आपका स्कोर: <span id="userScore" style="color: #eab308; font-weight: bold; font-size: 18px;">0</span> | ओपोनेंट स्कोर: <span id="botScore" style="color: #ef4444; font-weight: bold; font-size: 18px;">0</span></p>
+            <button class="btn" onclick="rollLudoDice()" id="ludoDiceBtn">🎲 पासा फेंकें</button>
+        </div>
+        <p id="ludoStatus" style="font-size: 13px; margin-top: 8px;">ऊपर फीस और मोड चुनकर मैच शुरू करें!</p>
+    </div>
+    <div id="aviator" class="game-section">
+        <h3>🚀 Aviator Game</h3>
+        <p style="font-size: 22px; color: #eab308; font-weight: bold;" id="multiplier">1.00x</p>
+        <button class="btn" onclick="startAviator()">₹10 बेट लगाएं</button>
+        <button class="btn btn-cashout" onclick="cashOutAviator()" id="aviatorCashBtn" disabled>कैश आउट</button>
+        <p id="aviatorStatus" style="font-size: 13px; margin-top: 8px;"></p>
+    </div>
+    <div id="mines" class="game-section">
+        <h3>💣 Mines Game</h3>
+        <div class="mines-grid" id="grid"></div>
+        <button class="btn" onclick="startMines()">₹10 बेट लगाएं</button>
+        <button class="btn btn-cashout" onclick="cashOutMines()">कैश आउट</button>
+        <p id="minesStatus" style="font-size: 13px; margin-top: 8px;"></p>
+    </div>
+    <div id="color" class="game-section">
+        <h3>🎨 Color Prediction</h3>
+        <p>रंग चुनें (₹10 बेट)</p>
+        <button class="btn" style="background: #16a34a;" onclick="playColor('Green')">Green</button>
+        <button class="btn" style="background: #dc2626;" onclick="playColor('Red')">Red</button>
+        <p id="colorStatus" style="font-size: 13px; margin-top: 8px;"></p>
+    </div>
+    <div class="withdraw-box">
+        <h4 style="margin: 0 0 5px 0;">💸 विड्रॉल (Min ₹200)</h4>
+        <label>UPI ID:</label><input type="text" id="upiId" placeholder="name@upi">
+        <label>रकम (₹):</label><input type="number" id="withdrawAmt" placeholder="कम से कम 200">
+        <p style="font-size: 11px; color: #94a3b8; margin: 2px 0 5px 0;">* ₹11 सर्विस फीस कटेगी (2 घंटे में ट्रांसफर)</p>
+        <button class="btn" style="width: 100%; background: #dc2626;" onclick="processWithdrawal()">विड्रॉल भेजें</button>
+        <p id="withdrawStatus" style="color: #22c55e; font-size: 12px; margin-top: 5px;"></p>
+    </div>
+    <script>
+        let depositBalance = 500, winningBalance = 0;
+        const COMMISSION_PERCENT = 15;
+        function updateBalanceUI() { document.getElementById("depBalance").innerText = depositBalance; document.getElementById("winBalance").innerText = winningBalance; }
+        function switchGame(gameId) { document.querySelectorAll('.game-section').forEach(el => el.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(gameId).classList.add('active'); event.target.classList.add('active'); }
+        function calculateAndCreditWin(totalPoolAmount) { let appCommission = Math.floor(totalPoolAmount * (COMMISSION_PERCENT / 100)); let winnerPayout = totalPoolAmount - appCommission; winningBalance += winnerPayout; updateBalanceUI(); return { payout: winnerPayout, commission: appCommission }; }
+        let ludoTimeLeft = 180, userScore = 0, botScore = 0, ludoStarted = false, ludoTimerInterval, selectedFee = 20, selectedMode = '1v1';
+        function startLudoMatch() { selectedFee = parseInt(document.getElementById("ludoFee").value); selectedMode = document.getElementById("ludoMode").value; if (depositBalance < selectedFee) { alert("डिपॉजिट बैलेंस कम है!"); return; } depositBalance -= selectedFee; updateBalanceUI(); document.getElementById("ludoStartBtn").style.display = "none"; document.getElementById("ludoArea").style.display = "block"; ludoStarted = true; userScore = 0; botScore = 0; ludoTimeLeft = 180; document.getElementById("userScore").innerText = userScore; document.getElementById("botScore").innerText = botScore; document.getElementById("ludoDiceBtn").disabled = false; document.getElementById("ludoStatus").innerText = `मैच लाइव (${selectedMode})!`; ludoTimerInterval = setInterval(() => { ludoTimeLeft--; let m = Math.floor(ludoTimeLeft / 60), s = ludoTimeLeft % 60; document.getElementById("ludoTimer").innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`; if (ludoTimeLeft <= 0) { clearInterval(ludoTimerInterval); ludoStarted = false; document.getElementById("ludoDiceBtn").disabled = true; let playersCount = selectedMode === '1v1' ? 2 : (selectedMode === '2v2' ? 4 : 8); let totalPool = selectedFee * playersCount; if (userScore > botScore) { let winDetails = calculateAndCreditWin(totalPool); document.getElementById("ludoStatus").innerText = `🎉 आप जीत गए! ₹${winDetails.payout}`; } else { document.getElementById("ludoStatus").innerText = `💥 आप हार गए।`; } setTimeout(() => { document.getElementById("ludoStartBtn").style.display = "inline-block"; document.getElementById("ludoArea").style.display = "none"; }, 5000); } }, 1000); }
+        function rollLudoDice() { if (!ludoStarted) return; let userDice = Math.floor(Math.random() * 6) + 1, botDice = Math.floor(Math.random() * 6) + 1; userScore += userDice * 10; botScore += botDice * 10; document.getElementById("userScore").innerText = userScore; document.getElementById("botScore").innerText = botScore; document.getElementById("ludoStatus").innerText = `आपने: ${userDice} | ओपोनेंट: ${botDice}`; }
+        let aviatorInterval, currentMultiplier = 1.00, aviatorRunning = false;
+        function startAviator() { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } if (aviatorRunning) return; depositBalance -= 10; updateBalanceUI(); aviatorRunning = true; currentMultiplier = 1.00; document.getElementById("aviatorCashBtn").disabled = false; aviatorInterval = setInterval(() => { currentMultiplier += 0.08; document.getElementById("multiplier").innerText = currentMultiplier.toFixed(2) + "x"; if (Math.random() < 0.05 || currentMultiplier > 5.0) { clearInterval(aviatorInterval); if (aviatorRunning) { aviatorRunning = false; document.getElementById("aviatorCashBtn").disabled = true; document.getElementById("aviatorStatus").innerText = "💥 क्रैश!"; } } }, 200); }
+        function cashOutAviator() { if (!aviatorRunning) return; clearInterval(aviatorInterval); aviatorRunning = false; document.getElementById("aviatorCashBtn").disabled = true; let totalPool = Math.floor(10 * currentMultiplier * 2); let winDetails = calculateAndCreditWin(totalPool); document.getElementById("aviatorStatus").innerText = `🎉 जीते: ₹${winDetails.payout}`; }
+        let minesActive = false, minesLoc = [], safeCount = 0, gridEl = document.getElementById("grid");
+        function createMinesGrid() { gridEl.innerHTML = ""; for (let i = 0; i < 25; i++) { let btn = document.createElement("button"); btn.className = "grid-box"; btn.innerText = "?"; btn.onclick = () => revealMineBox(i, btn); gridEl.appendChild(btn); } }
+        function startMines() { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } depositBalance -= 10; updateBalanceUI(); minesActive = true; safeCount = 0; document.getElementById("minesStatus").innerText = "सेफ बॉक्स चुनें!"; createMinesGrid(); minesLoc = []; while (minesLoc.length < 3) { let r = Math.floor(Math.random() * 25); if (!minesLoc.includes(r)) minesLoc.push(r); } }
+        function revealMineBox(idx, btn) { if (!minesActive || btn.disabled) return; btn.disabled = true; if (minesLoc.includes(idx)) { btn.className = "grid-box open-mine"; btn.innerText = "💣"; document.getElementById("minesStatus").innerText = "💥 बम फूटा!"; minesActive = false; } else { btn.className = "grid-box open-safe"; btn.innerText = "💎"; safeCount++; let gross = Math.floor(10 * (1 + safeCount * 0.4) * 2); document.getElementById("minesStatus").innerText = `सेफ! पूल: ₹${gross}`; } }
+        function cashOutMines() { if (!minesActive || safeCount === 0) return; let totalPool = Math.floor(10 * (1 + safeCount * 0.4) * 2); let winDetails = calculateAndCreditWin(totalPool); minesActive = false; document.getElementById("minesStatus").innerText = `🎉 जीते: ₹${winDetails.payout}`; }
+        createMinesGrid();
+        function playColor(chosenColor) { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } depositBalance -= 10; updateBalanceUI(); let colors = ['Green', 'Red', 'Violet'], winColor = colors[Math.floor(Math.random() * colors.length)]; if (chosenColor === winColor) { let winDetails = calculateAndCreditWin(40); document.getElementById("colorStatus").innerText = `🎉 सही (${winColor}): ₹${winDetails.payout}`; } else { document.getElementById("colorStatus").innerText = `❌ गलत (${winColor})`; } }
+        function processWithdrawal() { let amount = parseInt(document.getElementById("withdrawAmt").value), upi = document.getElementById("upiId").value; if (!upi) { alert("UPI ID डालें!"); return; } if (amount < 200) { alert("न्यूनतम ₹200!"); return; } if (amount > winningBalance) { alert("जीत बैलेंस कम है!"); return; } winningBalance -= amount; updateBalanceUI(); document.getElementById("withdrawStatus").innerText = `रिक्वेस्ट सबमिट! ₹11 काटकर पैसे 2 घंटे में मिलेंगे।`; }
+    </script>
+</body>
+</html>
