@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Ludo - Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f19; color: white; padding: 15px; margin: 0; }
+        .admin-container { max-width: 400px; margin: 0 auto; }
+        .header { background: #1e293b; padding: 20px; border-radius: 15px; text-align: center; border: 2px solid #ef4444; margin-bottom: 20px; }
+        .header h2 { margin: 0; color: #ef4444; font-size: 22px; }
+        .request-card { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #334155; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .request-card p { margin: 6px 0; font-size: 14px; color: #cbd5e1; }
+        .request-card strong { color: #fbbf24; }
+        .btn-approve { background: #22c55e; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
+        .btn-approve:active { transform: scale(0.96); }
+        .no-request { text-align: center; color: #64748b; margin-top: 40px; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="header">
+            <h2>🛡️ Admin Panel</h2>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Manage User Deposits & Balances</p>
+        </div>
+
+        <div id="requestsList">
+            <div class="no-request">No pending deposit requests right now.</div>
+        </div>
+    </div>
+
+    <script>
+        function loadRequests() {
+            const list = document.getElementById('requestsList');
+            list.innerHTML = `
+                <div class="request-card">
+                    <p>📱 Mobile: <strong>9876543210</strong></p>
+                    <p>💰 Amount: <strong style="color: #22c55e;">₹100</strong></p>
+                    <p>🔖 UTR / Txn ID: <strong>UPI4256789123</strong></p>
+                    <button class="btn-approve" onclick="approveDeposit(this, '9876543210', 100)">✅ Approve & Add Balance</button>
+                </div>
+            `;
+        }
+
+        function approveDeposit(btn, mobile, amount) {
+            alert(`Success! ₹${amount} has been successfully approved for user mobile: ${mobile}`);
+            btn.parentElement.style.opacity = '0.5';
+            btn.innerHTML = '✔ Approved';
+            btn.disabled = true;
+        }
+
+        loadRequests();
+    </script>
+
+</body>
+</html>
