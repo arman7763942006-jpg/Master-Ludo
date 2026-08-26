@@ -3,104 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Ludo - All Games</title>
+    <title>Master Ludo - Pro Gaming Arena</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 10px; text-align: center; }
-        .wallet-header { display: flex; justify-content: space-around; background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 10px; }
-        .balance-card { font-size: 12px; }
-        .balance-amount { font-size: 16px; font-weight: bold; color: #22c55e; margin-top: 2px; }
-        .winning-amount { color: #eab308; }
-        .menu-bar { display: flex; justify-content: center; gap: 4px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #334155; color: #fff; border: none; padding: 7px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .tab-btn.active { background: #2563eb; }
-        .game-section { display: none; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .game-section.active { display: block; }
-        .btn { background: #2563eb; color: #fff; border: none; padding: 8px 15px; font-size: 14px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        .btn-cashout { background: #eab308; color: #000; }
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-width: 250px; margin: 10px auto; }
-        .grid-box { width: 45px; height: 45px; background: #334155; border: none; border-radius: 5px; font-size: 16px; color: #fff; cursor: pointer; }
-        .grid-box.open-safe { background: #15803d; }
-        .grid-box.open-mine { background: #b91c1c; }
-        .withdraw-box { background: #1e293b; padding: 10px; border-radius: 8px; text-align: left; font-size: 13px; }
-        select, input { width: 95%; padding: 6px; margin: 3px 0 8px 0; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f19; color: white; padding: 15px; margin: 0; padding-bottom: 70px; }
+        
+        /* Prominent App Download Top Banner */
+        .download-top-banner { background: linear-gradient(135deg, #4f46e5, #2563eb); padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; border: 2px solid #818cf8; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.5); }
+        .download-top-banner h3 { margin: 0 0 5px 0; font-size: 20px; color: #fff; font-weight: 800; letter-spacing: 0.5px; }
+        .download-top-banner p { margin: 0 0 15px 0; font-size: 13px; color: #e0e7ff; }
+        .btn-download-app { background: #ffffff; color: #4f46e5; padding: 12px 28px; border-radius: 30px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.3); text-decoration: none; display: inline-block; transition: 0.2s; }
+        .btn-download-app:active { transform: scale(0.95); }
+
+        /* Login Screen */
+        #loginScreen { background: #1e293b; padding: 25px; border-radius: 20px; max-width: 350px; margin: 20px auto; border: 2px solid #334155; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        /* Main App */
+        #mainApp { display: none; }
+
+        /* Premium Wallet Header */
+        .wallet-header { display: flex; justify-content: space-between; background: linear-gradient(135deg, #1e293b, #0f172a); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; box-shadow: 0 8px 16px rgba(0,0,0,0.4); cursor: pointer; }
+        .wallet-box { text-align: center; width: 48%; }
+        .wallet-box h4 { margin: 0 0 5px 0; font-size: 12px; color: #94a3b8; text-transform: uppercase; }
+        .wallet-box span { font-size: 20px; font-weight: bold; color: #22c55e; }
+
+        /* Home Screen Games Grid */
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        
+        /* Luxurious & Premium Ludo Game Card Interface */
+        .game-card-ludo { background: linear-gradient(135deg, #b45309, #d97706, #f59e0b); padding: 25px 15px; border-radius: 22px; text-align: center; cursor: pointer; border: 2px solid #fde68a; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4); transition: 0.2s; position: relative; overflow: hidden; }
+        .game-card-ludo:active { transform: scale(0.96); }
+        .game-card-ludo h2 { margin: 5px 0 5px 0; font-size: 22px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .game-card-ludo p { margin: 0; font-size: 12px; color: #fef3c7; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-premium { background: #ffffff; color: #b45309; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 10px; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        /* Standard Game Card */
+        .game-card { background: linear-gradient(145deg, #1e293b, #334155); padding: 25px 15px; border-radius: 20px; text-align: center; cursor: pointer; border: 2px solid #475569; box-shadow: 0 6px 12px rgba(0,0,0,0.3); transition: 0.2s; }
+        .game-card:active { transform: scale(0.96); }
+        .game-card h2 { margin: 0 0 8px 0; font-size: 22px; color: #fbbf24; }
+        .game-card p { margin: 0; font-size: 13px; color: #cbd5e1; font-weight: 500; }
+
+        /* Ludo Tournament Listing Page */
+        #ludoSection { display: none; background: #1e293b; padding: 20px; border-radius: 20px; border: 2px solid #fbbf24; margin-top: 15px; }
+        .tournament-item { background: #0f172a; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .tournament-info h4 { margin: 0 0 3px 0; font-size: 15px; color: #fbbf24; }
+        .tournament-info p { margin: 0; font-size: 12px; color: #94a3b8; }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #334155; box-shadow: 0 -4px 10px rgba(0,0,0,0.3); z-index: 100; }
+        .nav-item { background: none; border: none; color: #94a3b8; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; }
+        .nav-item.active { color: #fbbf24; }
+
+        /* Modal Sections */
+        .modal-section { display: none; background: #1e293b; padding: 20px; border-radius: 20px; border: 1px solid #475569; margin-bottom: 20px; }
+        
+        input, button { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; font-size: 15px; font-weight: bold; }
+        input { background: #0f172a; color: white; border: 1px solid #475569; }
+        .btn-green { background: #22c55e; color: white; cursor: pointer; box-shadow: 0 4px 10px rgba(34,197,94,0.3); }
+        .btn-red { background: #ef4444; color: white; cursor: pointer; }
+        .btn-play { background: #fbbf24; color: #0b0f19; cursor: pointer; padding: 8px 15px; font-size: 13px; border-radius: 6px; width: auto; margin: 0; }
+        .btn-back { background: #64748b; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="wallet-header">
-        <div class="balance-card"><div>💳 डिपॉजिट (₹)</div><div class="balance-amount" id="depBalance">500</div></div>
-        <div class="balance-card"><div>🏆 जीत बैलेंस (₹)</div><div class="balance-amount winning-amount" id="winBalance">0</div></div>
+
+    <!-- App Download Top Banner (Requested Feature) -->
+    <div class="download-top-banner">
+        <h3>⚡ Master Ludo Official App</h3>
+        <p>Download our official Android APK for smooth gaming & instant withdrawals!</p>
+        <a href="#" class="btn-download-app" onclick="alert('Downloading Master Ludo APK...')">📥 Download App (APK)</a>
     </div>
-    <div class="menu-bar">
-        <button class="tab-btn active" onclick="switchGame('ludo')">🎲 Ludo</button>
-        <button class="tab-btn" onclick="switchGame('aviator')">🚀 Aviator</button>
-        <button class="tab-btn" onclick="switchGame('mines')">💣 Mines</button>
-        <button class="tab-btn" onclick="switchGame('color')">🎨 Color</button>
-    </div>
-    <div id="ludo" class="game-section active">
-        <h3>⏱️ Zupee Style Ludo (Timer & Battle)</h3>
-        <div style="text-align: left; font-size: 13px; margin-bottom: 10px;">
-            <label>एंट्री फीस चुनें:</label>
-            <select id="ludoFee"><option value="1">₹1 Match</option><option value="5">₹5 Match</option><option value="10">₹10 Match</option><option value="20" selected>₹20 Match</option><option value="35">₹35 Match</option><option value="50">₹50 Match</option><option value="75">₹75 Match</option><option value="100">₹100 Match</option></select>
-            <label>गेम मोड चुनें:</label>
-            <select id="ludoMode"><option value="1v1">1 v 1 (2 Players)</option><option value="2v2">2 v 2 (4 Players)</option><option value="4v4">4 v 4 (Battle)</option></select>
+
+    <!-- 1. Login Screen -->
+    <div id="loginScreen">
+        <h2 style="color: #fbbf24; margin-top: 0;">🔐 Login or Sign Up</h2>
+        <p style="font-size: 13px; color: #94a3b8;">Enter your mobile number to play games:</p>
+        <input type="tel" id="userMobile" placeholder="Enter your mobile number" maxlength="10">
+        <button class="btn-green" onclick="sendOtp()">Send OTP</button>
+
+        <div id="otpBox" style="display:none; margin-top: 15px;">
+            <p style="font-size: 12px; color: #22c55e;">OTP sent successfully!</p>
+            <input type="text" id="enteredOtp" placeholder="Enter OTP (e.g., 1234)">
+            <button class="btn-green" onclick="verifyOtp()">Login Now</button>
         </div>
-        <button class="btn" onclick="startLudoMatch()" id="ludoStartBtn">🎮 मैच शुरू करें</button>
-        <div id="ludoArea" style="display:none; margin-top: 10px;">
-            <p>मैच का समय: <span id="ludoTimer" style="color: #22c55e; font-weight: bold;">03:00</span></p>
-            <p>आपका स्कोर: <span id="userScore" style="color: #eab308; font-weight: bold; font-size: 18px;">0</span> | ओपोनेंट स्कोर: <span id="botScore" style="color: #ef4444; font-weight: bold; font-size: 18px;">0</span></p>
-            <button class="btn" onclick="rollLudoDice()" id="ludoDiceBtn">🎲 पासा फेंकें</button>
+    </div>
+
+    <!-- 2. Main App -->
+    <div id="mainApp">
+        <!-- Wallet Header -->
+        <div class="wallet-header" onclick="switchTab('account')">
+            <div class="wallet-box">
+                <h4>Welcome Bonus</h4>
+                <span>₹10</span>
+            </div>
+            <div class="wallet-box" style="border-left: 1px solid #334155;">
+                <h4>Winning Balance</h4>
+                <span style="color: #fbbf24;" id="winningBalance">₹0</span>
+            </div>
         </div>
-        <p id="ludoStatus" style="font-size: 13px; margin-top: 8px;">ऊपर फीस और मोड चुनकर मैच शुरू करें!</p>
+
+        <!-- Home Screen Games Grid -->
+        <div id="homeScreen">
+            <h2 style="font-size: 18px; margin-bottom: 15px; color: #f8fafc; text-align: center;">🔥 Selected Premium Games</h2>
+            <div class="games-grid">
+                <!-- Luxurious & Premium Ludo Interface Card (Requested Feature) -->
+                <div class="game-card-ludo" onclick="openLudo()">
+                    <span class="badge-premium">★ VIP TOURNAMENT</span>
+                    <div style="font-size: 38px; margin: 5px 0;">🎲</div>
+                    <h2>Master Ludo</h2>
+                    <p>Zupee Timer Battles</p>
+                </div>
+                <div class="game-card" onclick="alert('Aviator game is opening! (Min ₹10)')">
+                    <div style="font-size: 35px; margin-bottom: 5px;">🚀</div>
+                    <h2>Aviator</h2>
+                    <p>Fly high, win cash</p>
+                </div>
+                <div class="game-card" onclick="alert('Mines game is opening! (Min ₹5)')">
+                    <div style="font-size: 35px; margin-bottom: 5px;">💣</div>
+                    <h2>Mines</h2>
+                    <p>Avoid bombs, find treasure</p>
+                </div>
+                <div class="game-card" onclick="alert('Color Prediction is opening! (Min ₹5)')">
+                    <div style="font-size: 35px; margin-bottom: 5px;">🎨</div>
+                    <h2>Color</h2>
+                    <p>Color prediction game</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ludo Tournaments Section -->
+        <div id="ludoSection" class="modal-section">
+            <h2 style="color: #fbbf24; margin-top: 0; text-align: center;">🎲 Master Ludo - Tournaments</h2>
+            <p style="font-size: 12px; color: #94a3b8; text-align: center; margin-bottom: 15px;">Compete with unique live players & smart bots:</p>
+
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹1 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Timer Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(1, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹2 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Timer Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(2, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹5 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Timer Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(5, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹10 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Pro Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(10, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹25 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Master Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(25, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+            <div class="tournament-item">
+                <div class="tournament-info">
+                    <h4>₹50 Ludo (1 v 1)</h4>
+                    <p>Time: 5 Mins | Legend Battle</p>
+                </div>
+                <button class="btn-play" onclick="startLudoMatch(50, '1 v 1', '5 Mins')">Join Now</button>
+            </div>
+
+            <button class="btn-back" onclick="closeLudo()" style="margin-top: 15px;">← Back to Home</button>
+        </div>
+
+        <!-- Account & Wallet Section -->
+        <div id="accountSection" class="modal-section">
+            <h2 style="color: #fbbf24; margin-top: 0; text-align: center;">👤 Account & Wallet</h2>
+            
+            <div style="background: #0f172a; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <h3 style="margin-top: 0; color: #22c55e;">➕ Add Funds (Scan & Pay)</h3>
+                <center>
+                    <img src="YOUR_QR_IMAGE.jpg" alt="QR Code" style="width: 140px; height: 140px; background: white; padding: 5px; border-radius: 8px;">
+                </center>
+                <p style="text-align: center; font-size: 13px; margin: 5px 0;">UPI ID: <strong>your-upi-id@ybl</strong></p>
+                <input type="tel" id="depMobile" placeholder="Your Mobile Number">
+                <input type="number" id="depAmount" placeholder="Paid Amount (₹1 - ₹5000)">
+                <input type="text" id="depUtr" placeholder="PhonePe UTR / Transaction ID">
+                <button class="btn-green" onclick="submitDeposit()">Confirm Deposit</button>
+            </div>
+
+            <div style="background: #0f172a; padding: 15px; border-radius: 12px;">
+                <h3 style="margin-top: 0; color: #ef4444;">🏦 Withdraw (Min ₹200)</h3>
+                <p style="font-size: 11px; color: #facc15;">*A service charge of ₹20 will be automatically deducted from withdrawal.</p>
+                <input type="tel" id="witMobile" placeholder="Registered Mobile Number">
+                <input type="number" id="witAmount" placeholder="Total Withdrawal Amount (Min ₹200)" oninput="calculateWithdraw(this.value)">
+                <p id="witCalculation" style="font-size: 13px; color: #22c55e; margin: 5px 0; font-weight: bold;"></p>
+                <input type="text" id="witUpi" placeholder="Enter your UPI ID">
+                <button class="btn-red" onclick="submitWithdrawal()">Send Withdrawal Request</button>
+            </div>
+        </div>
+
+        <!-- Help & AI Support Section -->
+        <div id="helpSection" class="modal-section">
+            <h2 style="color: #8b5cf6; margin-top: 0; text-align: center;">🤖 Help & AI Support</h2>
+            <div style="background: #0f172a; padding: 15px; border-radius: 12px; text-align: center;">
+                <p style="color: #cbd5e1; font-size: 14px;">Dynamic bot profiles and company-safe profit algorithms are fully active to keep user experience realistic.</p>
+                <p style="color: #22c55e; font-weight: bold;">System is fully secure</p>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('home')" id="navHome">🏠 Home</button>
+            <button class="nav-item" onclick="switchTab('account')" id="navAccount">👤 Account</button>
+            <button class="nav-item" onclick="switchTab('help')" id="navHelp">🤖 Help</button>
+        </div>
     </div>
-    <div id="aviator" class="game-section">
-        <h3>🚀 Aviator Game</h3>
-        <p style="font-size: 22px; color: #eab308; font-weight: bold;" id="multiplier">1.00x</p>
-        <button class="btn" onclick="startAviator()">₹10 बेट लगाएं</button>
-        <button class="btn btn-cashout" onclick="cashOutAviator()" id="aviatorCashBtn" disabled>कैश आउट</button>
-        <p id="aviatorStatus" style="font-size: 13px; margin-top: 8px;"></p>
-    </div>
-    <div id="mines" class="game-section">
-        <h3>💣 Mines Game</h3>
-        <div class="mines-grid" id="grid"></div>
-        <button class="btn" onclick="startMines()">₹10 बेट लगाएं</button>
-        <button class="btn btn-cashout" onclick="cashOutMines()">कैश आउट</button>
-        <p id="minesStatus" style="font-size: 13px; margin-top: 8px;"></p>
-    </div>
-    <div id="color" class="game-section">
-        <h3>🎨 Color Prediction</h3>
-        <p>रंग चुनें (₹10 बेट)</p>
-        <button class="btn" style="background: #16a34a;" onclick="playColor('Green')">Green</button>
-        <button class="btn" style="background: #dc2626;" onclick="playColor('Red')">Red</button>
-        <p id="colorStatus" style="font-size: 13px; margin-top: 8px;"></p>
-    </div>
-    <div class="withdraw-box">
-        <h4 style="margin: 0 0 5px 0;">💸 विड्रॉल (Min ₹200)</h4>
-        <label>UPI ID:</label><input type="text" id="upiId" placeholder="name@upi">
-        <label>रकम (₹):</label><input type="number" id="withdrawAmt" placeholder="कम से कम 200">
-        <p style="font-size: 11px; color: #94a3b8; margin: 2px 0 5px 0;">* ₹11 सर्विस फीस कटेगी (2 घंटे में ट्रांसफर)</p>
-        <button class="btn" style="width: 100%; background: #dc2626;" onclick="processWithdrawal()">विड्रॉल भेजें</button>
-        <p id="withdrawStatus" style="color: #22c55e; font-size: 12px; margin-top: 5px;"></p>
-    </div>
+
     <script>
-        let depositBalance = 500, winningBalance = 0;
-        const COMMISSION_PERCENT = 15;
-        function updateBalanceUI() { document.getElementById("depBalance").innerText = depositBalance; document.getElementById("winBalance").innerText = winningBalance; }
-        function switchGame(gameId) { document.querySelectorAll('.game-section').forEach(el => el.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(gameId).classList.add('active'); event.target.classList.add('active'); }
-        function calculateAndCreditWin(totalPoolAmount) { let appCommission = Math.floor(totalPoolAmount * (COMMISSION_PERCENT / 100)); let winnerPayout = totalPoolAmount - appCommission; winningBalance += winnerPayout; updateBalanceUI(); return { payout: winnerPayout, commission: appCommission }; }
-        let ludoTimeLeft = 180, userScore = 0, botScore = 0, ludoStarted = false, ludoTimerInterval, selectedFee = 20, selectedMode = '1v1';
-        function startLudoMatch() { selectedFee = parseInt(document.getElementById("ludoFee").value); selectedMode = document.getElementById("ludoMode").value; if (depositBalance < selectedFee) { alert("डिपॉजिट बैलेंस कम है!"); return; } depositBalance -= selectedFee; updateBalanceUI(); document.getElementById("ludoStartBtn").style.display = "none"; document.getElementById("ludoArea").style.display = "block"; ludoStarted = true; userScore = 0; botScore = 0; ludoTimeLeft = 180; document.getElementById("userScore").innerText = userScore; document.getElementById("botScore").innerText = botScore; document.getElementById("ludoDiceBtn").disabled = false; document.getElementById("ludoStatus").innerText = `मैच लाइव (${selectedMode})!`; ludoTimerInterval = setInterval(() => { ludoTimeLeft--; let m = Math.floor(ludoTimeLeft / 60), s = ludoTimeLeft % 60; document.getElementById("ludoTimer").innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`; if (ludoTimeLeft <= 0) { clearInterval(ludoTimerInterval); ludoStarted = false; document.getElementById("ludoDiceBtn").disabled = true; let playersCount = selectedMode === '1v1' ? 2 : (selectedMode === '2v2' ? 4 : 8); let totalPool = selectedFee * playersCount; if (userScore > botScore) { let winDetails = calculateAndCreditWin(totalPool); document.getElementById("ludoStatus").innerText = `🎉 आप जीत गए! ₹${winDetails.payout}`; } else { document.getElementById("ludoStatus").innerText = `💥 आप हार गए।`; } setTimeout(() => { document.getElementById("ludoStartBtn").style.display = "inline-block"; document.getElementById("ludoArea").style.display = "none"; }, 5000); } }, 1000); }
-        function rollLudoDice() { if (!ludoStarted) return; let userDice = Math.floor(Math.random() * 6) + 1, botDice = Math.floor(Math.random() * 6) + 1; userScore += userDice * 10; botScore += botDice * 10; document.getElementById("userScore").innerText = userScore; document.getElementById("botScore").innerText = botScore; document.getElementById("ludoStatus").innerText = `आपने: ${userDice} | ओपोनेंट: ${botDice}`; }
-        let aviatorInterval, currentMultiplier = 1.00, aviatorRunning = false;
-        function startAviator() { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } if (aviatorRunning) return; depositBalance -= 10; updateBalanceUI(); aviatorRunning = true; currentMultiplier = 1.00; document.getElementById("aviatorCashBtn").disabled = false; aviatorInterval = setInterval(() => { currentMultiplier += 0.08; document.getElementById("multiplier").innerText = currentMultiplier.toFixed(2) + "x"; if (Math.random() < 0.05 || currentMultiplier > 5.0) { clearInterval(aviatorInterval); if (aviatorRunning) { aviatorRunning = false; document.getElementById("aviatorCashBtn").disabled = true; document.getElementById("aviatorStatus").innerText = "💥 क्रैश!"; } } }, 200); }
-        function cashOutAviator() { if (!aviatorRunning) return; clearInterval(aviatorInterval); aviatorRunning = false; document.getElementById("aviatorCashBtn").disabled = true; let totalPool = Math.floor(10 * currentMultiplier * 2); let winDetails = calculateAndCreditWin(totalPool); document.getElementById("aviatorStatus").innerText = `🎉 जीते: ₹${winDetails.payout}`; }
-        let minesActive = false, minesLoc = [], safeCount = 0, gridEl = document.getElementById("grid");
-        function createMinesGrid() { gridEl.innerHTML = ""; for (let i = 0; i < 25; i++) { let btn = document.createElement("button"); btn.className = "grid-box"; btn.innerText = "?"; btn.onclick = () => revealMineBox(i, btn); gridEl.appendChild(btn); } }
-        function startMines() { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } depositBalance -= 10; updateBalanceUI(); minesActive = true; safeCount = 0; document.getElementById("minesStatus").innerText = "सेफ बॉक्स चुनें!"; createMinesGrid(); minesLoc = []; while (minesLoc.length < 3) { let r = Math.floor(Math.random() * 25); if (!minesLoc.includes(r)) minesLoc.push(r); } }
-        function revealMineBox(idx, btn) { if (!minesActive || btn.disabled) return; btn.disabled = true; if (minesLoc.includes(idx)) { btn.className = "grid-box open-mine"; btn.innerText = "💣"; document.getElementById("minesStatus").innerText = "💥 बम फूटा!"; minesActive = false; } else { btn.className = "grid-box open-safe"; btn.innerText = "💎"; safeCount++; let gross = Math.floor(10 * (1 + safeCount * 0.4) * 2); document.getElementById("minesStatus").innerText = `सेफ! पूल: ₹${gross}`; } }
-        function cashOutMines() { if (!minesActive || safeCount === 0) return; let totalPool = Math.floor(10 * (1 + safeCount * 0.4) * 2); let winDetails = calculateAndCreditWin(totalPool); minesActive = false; document.getElementById("minesStatus").innerText = `🎉 जीते: ₹${winDetails.payout}`; }
-        createMinesGrid();
-        function playColor(chosenColor) { if (depositBalance < 10) { alert("बैलेंस कम है!"); return; } depositBalance -= 10; updateBalanceUI(); let colors = ['Green', 'Red', 'Violet'], winColor = colors[Math.floor(Math.random() * colors.length)]; if (chosenColor === winColor) { let winDetails = calculateAndCreditWin(40); document.getElementById("colorStatus").innerText = `🎉 सही (${winColor}): ₹${winDetails.payout}`; } else { document.getElementById("colorStatus").innerText = `❌ गलत (${winColor})`; } }
-        function processWithdrawal() { let amount = parseInt(document.getElementById("withdrawAmt").value), upi = document.getElementById("upiId").value; if (!upi) { alert("UPI ID डालें!"); return; } if (amount < 200) { alert("न्यूनतम ₹200!"); return; } if (amount > winningBalance) { alert("जीत बैलेंस कम है!"); return; } winningBalance -= amount; updateBalanceUI(); document.getElementById("withdrawStatus").innerText = `रिक्वेस्ट सबमिट! ₹11 काटकर पैसे 2 घंटे में मिलेंगे।`; }
+        let matchCount = 0;
+
+        // Dynamic Bot & Opponent Profiles Pool (Unique name & level every time)
+        const botPool = [
+            { name: "Aarav_King", level: "Pro Player" },
+            { name: "Vikram_Ludo", level: "Master" },
+            { name: "Rahul_Pro99", level: "Expert" },
+            { name: "Amit_Gamer", level: "Legend" },
+            { name: "Deepak_Star", level: "Pro Player" },
+            { name: "Sahil_007", level: "Master" },
+            { name: "Manish_Box", level: "Expert" },
+            { name: "Karan_LudoPro", level: "Legend" },
+            { name: "Rohit_Champion", level: "Pro Player" },
+            { name: "Pankaj_Fast", level: "Master" }
+        ];
+
+        function sendOtp() {
+            const mobile = document.getElementById('userMobile').value;
+            if(mobile.length < 10) {
+                alert("Please enter a valid 10-digit mobile number!");
+                return;
+            }
+            document.getElementById('otpBox').style.display = 'block';
+            alert("Demo OTP: Enter 1234");
+        }
+
+        function verifyOtp() {
+            const otp = document.getElementById('enteredOtp').value;
+            if(otp === "1234" || otp.length === 4) {
+                alert("Login successful! You have received ₹10 welcome bonus.");
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            } else {
+                alert("Invalid OTP! Please enter correct OTP.");
+            }
+        }
+
+        function openLudo() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('ludoSection').style.display = 'block';
+        }
+
+        function closeLudo() {
+            document.getElementById('ludoSection').style.display = 'none';
+            document.getElementById('homeScreen').style.display = 'block';
+        }
+
+        function switchTab(tab) {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('ludoSection').style.display = 'none';
+            document.getElementById('accountSection').style.display = 'none';
+            document.getElementById('helpSection').style.display = 'none';
+
+            document.getElementById('navHome').classList.remove('active');
+            document.getElementById('navAccount').classList.remove('active');
+            document.getElementById('navHelp').classList.remove('active');
+
+            if(tab === 'home') {
+                document.getElementById('homeScreen').style.display = 'block';
+                document.getElementById('navHome').classList.add('active');
+            } else if(tab === 'account') {
+                document.getElementById('accountSection').style.display = 'block';
+                document.getElementById('navAccount').classList.add('active');
+            } else if(tab === 'help') {
+                document.getElementById('helpSection').style.display = 'block';
+                document.getElementById('navHelp').classList.add('active');
+            }
+        }
+
+        function startLudoMatch(fee, mode, timer) {
+            matchCount++;
+            
+            let randomBot = botPool[Math.floor(Math.random() * botPool.length)];
+            let opponentName = randomBot.name;
+            let opponentLevel = randomBot.level;
+
+            let winChance = (matchCount <= 2) ? 0.70 : 0.28;
+            let isUserWin = Math.random() < winChance;
+            
+            let userScore = Math.floor(Math.random() * 35) + 80;
+            let botScore = isUserWin ? (userScore - Math.floor(Math.random() * 15) - 3) : (userScore + Math.floor(Math.random() * 22) + 8);
+
+            if(isUserWin) {
+                alert(`🎲 Ludo Tournament (Match #${matchCount})\nOpponent: ${opponentName} (${opponentLevel})\nEntry: ₹${fee} (${mode}, ${timer})\n\nResult: Your Score (${userScore}) vs Opponent Score (${botScore})\nCongratulations! You won the match against ${opponentName}!`);
+            } else {
+                alert(`🎲 Ludo Tournament (Match #${matchCount})\nOpponent: ${opponentName} (${opponentLevel})\nEntry: ₹${fee} (${mode}, ${timer})\n\nResult: Your Score (${userScore}) vs Opponent Score (${botScore})\nOops! ${opponentName} (${opponentLevel}) took the lead in the final moments. Better luck next time!`);
+            }
+        }
+
+        function submitDeposit() {
+            const mobile = document.getElementById('depMobile').value;
+            const amount = document.getElementById('depAmount').value;
+            const utr = document.getElementById('depUtr').value;
+            if(!mobile || !amount || !utr) {
+                alert("Please fill in all details!");
+                return;
+            }
+            alert("Deposit request submitted successfully!\nMobile: " + mobile + "\nAmount: ₹" + amount + "\nUTR: " + utr);
+        }
+
+        function calculateWithdraw(val) {
+            let amt = Number(val);
+            let calcText = document.getElementById('witCalculation');
+            if(amt >= 200) {
+                let finalAmt = amt - 20;
+                calcText.innerHTML = `After service charge (₹20), you will receive: <span style="color: #fbbf24;">₹${finalAmt}</span>`;
+            } else {
+                calcText.innerHTML = "";
+            }
+        }
+
+        function submitWithdrawal() {
+            const mobile = document.getElementById('witMobile').value;
+            const amount = document.getElementById('witAmount').value;
+            const upi = document.getElementById('witUpi').value;
+            
+            if(!mobile || !amount || !upi) {
+                alert("Please fill in all details!");
+                return;
+            }
+            let amtNum = Number(amount);
+            if(amtNum < 200) {
+                alert("Minimum withdrawal amount is ₹200!");
+                return;
+            }
+            
+            let finalPayout = amtNum - 20;
+            alert(`Withdrawal request successful!\nMobile: ${mobile}\nTotal Withdrawal: ₹${amtNum}\nService Charge: ₹20 (Deducted)\nYou Will Receive: ₹${finalPayout}\nUPI: ${upi}`);
+        }
     </script>
+
 </body>
 </html>
