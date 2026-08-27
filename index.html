@@ -505,19 +505,239 @@
         }, 150);
     }
 
-    // माइंड्स गेम लॉजिक
-    function clickMindsBox(btn) {
-        let isBomb = Math.random() < 0.3;
+    /<!-- === अरमान का अल्टीमेट गेमिंग एरीना (फुली मॉडिफाइड, साउंड और वाइब्रेशन के साथ) === -->
+<div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-top: 20px; border: 2px solid #f59e0b; color: white; text-align: center; font-family: sans-serif;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="color: #facc15; margin: 0;">🎲 Armaan Master Gaming Hub 🚀</h2>
+        <button onclick="toggleAudio()" id="sound-btn" style="background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">🔊 साउंड: चालू</button>
+    </div>
+
+    <!-- मेनू वाले सिर्फ 4 मुख्य गेम बटन -->
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0;">
+        <button onclick="showGame('ludo')" style="background: #2563eb; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">👑 लूडो टूर्नामेंट</button>
+        <button onclick="showGame('color')" style="background: #16a34a; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">🎨 कलर प्रेडिक्शन</button>
+        <button onclick="showGame('aviator')" style="background: #f97316; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">🚀 एविएटर</button>
+        <button onclick="showGame('minds')" style="background: #a855f7; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">💣 माइंड्स गेम (16 बॉक्स)</button>
+    </div>
+
+    <!-- 1. लूडो टूर्नामेंट बोर्ड (अंदर खुलने वाला) -->
+    <div id="box-ludo" class="game-box" style="display:none; border: 2px solid #ef4444; padding: 15px; border-radius: 8px; margin-top: 10px; background: #1e293b;">
+        <h3 style="color: #f87171; margin-top:0;">Live Ludo Supreme Tournament</h3>
+        
+        <!-- गोल हरा टाइमर -->
+        <div style="margin: 10px auto; width: 50px; height: 50px; border: 4px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #4ade80;" id="ludo-timer">10</div>
+        <p style="font-size: 12px; color: #cbd5e1;">समय शेष (अंतिम 3 सेक. पर वाइब्रेशन)</p>
+        
+        <!-- लूडो बोर्ड (4 रंग की गोटियाँ) -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 240px; height: 240px; margin: 10px auto; background: #0f172a; padding: 8px; border-radius: 8px; border: 2px solid #f59e0b;">
+            <div onclick="moveToken('लाल')" style="background: #dc2626; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);">लाल गोटी</div>
+            <div onclick="moveToken('हरा')" style="background: #16a34a; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);">हरी गोटी</div>
+            <div onclick="moveToken('नीला')" style="background: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);">नीली गोटी</div>
+            <div onclick="moveToken('पीला')" style="background: #ca8a04; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);">पीली गोटी</div>
+        </div>
+        <p id="ludo-status" style="color: #38bdf8; font-size: 13px;">पासा फेंकने के लिए नीचे बटन दबाएं</p>
+        <p>पासा नंबर: <span id="ludo-dice" style="font-size: 26px; color: #4ade80; font-weight: bold;">-</span></p>
+        <button onclick="rollLudoDice()" style="background: #10b981; color: white; border: none; padding: 10px 22px; font-weight: bold; border-radius: 6px; cursor: pointer;">🎲 पासा फेंके</button>
+    </div>
+
+    <!-- 2. कलर प्रेडिक्शन -->
+    <div id="box-color" class="game-box" style="display:none; border: 2px solid #38bdf8; padding: 15px; border-radius: 8px; margin-top: 10px; background: #1e293b;">
+        <h3 style="color: #38bdf8; margin-top:0;">Color Prediction</h3>
+        <p style="font-size: 13px;">रिजल्ट टाइमर: <span id="color-timer" style="color: #facc15; font-weight: bold;">10</span> सेक.</p>
+        <div style="display: flex; justify-content: center; gap: 10px; margin: 10px 0;">
+            <button onclick="pickColor('लाल')" style="background: #ef4444; color: white; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer;">लाल</button>
+            <button onclick="pickColor('हरा')" style="background: #22c55e; color: white; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer;">हरा</button>
+            <button onclick="pickColor('बैंगनी')" style="background: #a855f7; color: white; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer;">बैंगनी</button>
+        </div>
+        <p id="color-result" style="font-weight: bold; color: #4ade80;"></p>
+    </div>
+
+    <!-- 3. एविएटर -->
+    <div id="box-aviator" class="game-box" style="display:none; border: 2px solid #f97316; padding: 15px; border-radius: 8px; margin-top: 10px; background: #1e293b;">
+        <h3 style="color: #f97316; margin-top:0;">Aviator Rocket</h3>
+        <p style="font-size: 32px; font-weight: bold; color: #4ade80; margin: 10px 0;" id="aviator-multi">1.00x</p>
+        <button onclick="startAviatorGame()" style="background: #f59e0b; color: white; border: none; padding: 10px 22px; font-weight: bold; border-radius: 6px; cursor: pointer;">🚀 उड़ान भरें</button>
+    </div>
+
+    <!-- 4. बड़ा माइंड्स गेम (16 खानों वाला) -->
+    <div id="box-minds" class="game-box" style="display:none; border: 2px solid #a855f7; padding: 15px; border-radius: 8px; margin-top: 10px; background: #1e293b;">
+        <h3 style="color: #a855f7; margin-top:0;">Mines Win Arena (16 बॉक्सेस)</h3>
+        <p style="font-size: 13px; color: #cbd5e1;">बम बचाकर सिक्के ढूंढें:</p>
+        <div id="mines-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 260px; margin: 12px auto;">
+            <!-- JavaScript द्वारा 16 बॉक्सेस ऑटोमैटिक बनेंगे -->
+        </div>
+        <button onclick="resetMines()" style="background: #475569; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 5px;">🔄 रिसेट करें</button>
+        <p id="minds-msg" style="font-size: 13px; color: #38bdf8; margin-top: 8px;"></p>
+    </div>
+</div>
+
+<script>
+    let globalTimer = null;
+    let soundEnabled = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function toggleAudio() {
+        soundEnabled = !soundEnabled;
+        document.getElementById('sound-btn').innerText = soundEnabled ? "🔊 साउंड: चालू" : "🔇 साउंड: बंद";
+    }
+
+    function playTone(freq, type, duration) {
+        if (!soundEnabled) return;
+        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playClick() { playTone(500, 'sine', 0.08); }
+    function playDiceSound() { playTone(350, 'triangle', 0.15); }
+    function playTokenSound() { playTone(750, 'sine', 0.12); }
+    function playWinTune() {
+        playTone(523.25, 'sine', 0.12);
+        setTimeout(() => playTone(659.25, 'sine', 0.12), 120);
+        setTimeout(() => playTone(783.99, 'sine', 0.25), 240);
+    }
+
+    function showGame(name) {
+        playClick();
+        document.querySelectorAll('.game-box').forEach(b => b.style.display = 'none');
+        clearInterval(globalTimer);
+        
+        if(name === 'ludo') {
+            document.getElementById('box-ludo').style.display = 'block';
+            startLudoCountdown();
+        } else if(name === 'color') {
+            document.getElementById('box-color').style.display = 'block';
+            startColorCountdown();
+        } else if(name === 'aviator') {
+            document.getElementById('box-aviator').style.display = 'block';
+        } else if(name === 'minds') {
+            document.getElementById('box-minds').style.display = 'block';
+            initMinesBoard();
+        }
+    }
+
+    // लूडो टाइमर, वाइब्रेशन और मिस-टर्न लॉजिक
+    let ludoSec = 10;
+    function startLudoCountdown() {
+        ludoSec = 10;
+        document.getElementById('ludo-timer').innerText = ludoSec;
+        clearInterval(globalTimer);
+        globalTimer = setInterval(() => {
+            ludoSec--;
+            document.getElementById('ludo-timer').innerText = ludoSec;
+            
+            // अंतिम 3 सेकंड पर वाइब्रेशन और बीप साउंड
+            if(ludoSec === 3 || ludoSec === 2 || ludoSec === 1) {
+                playTone(300, 'sawtooth', 0.1);
+                if (navigator.vibrate) { navigator.vibrate(250); }
+            }
+
+            if(ludoSec <= 0) {
+                alert("समय समाप्त! टर्न मिस हो गई और आप गेम से बाहर हो गए।");
+                showGame('ludo'); // रिस्टार्ट
+            }
+        }, 1000);
+    }
+
+    function rollLudoDice() {
+        playDiceSound();
+        let val = Math.floor(Math.random() * 6) + 1;
+        document.getElementById('ludo-dice').innerText = val;
+        document.getElementById('ludo-status').innerText = "पासा आया: " + val + " (गोटी पर क्लिक करें)";
+        startLudoCountdown();
+    }
+
+    function moveToken(color) {
+        playTokenSound();
+        playWinTune();
+        document.getElementById('ludo-status').innerText = color + " गोटी चली आगे!";
+        startLudoCountdown();
+    }
+
+    // कलर प्रेडिक्शन लॉजिक
+    let colorSec = 10;
+    function startColorCountdown() {
+        colorSec = 10;
+        document.getElementById('color-timer').innerText = colorSec;
+        document.getElementById('color-result').innerText = "";
+        clearInterval(globalTimer);
+        globalTimer = setInterval(() => {
+            colorSec--;
+            document.getElementById('color-timer').innerText = colorSec;
+            if(colorSec <= 0) {
+                let cols = ['लाल', 'हरा', 'बैंगनी'];
+                let win = cols[Math.floor(Math.random() * cols.length)];
+                document.getElementById('color-result').innerText = "विजेता रंग: " + win;
+                playWinTune();
+                setTimeout(startColorCountdown, 3000);
+            }
+        }, 1000);
+    }
+    function pickColor(c) {
+        playClick();
+        alert("आपने " + c + " चुना है। रिजल्ट का इंतज़ार करें!");
+    }
+
+    // एविएटर गेम
+    function startAviatorGame() {
+        playClick();
+        let m = 1.00;
+        let mBox = document.getElementById('aviator-multi');
+        let flyInterval = setInterval(() => {
+            m += 0.05;
+            mBox.innerText = m.toFixed(2) + "x";
+            if(Math.random() < 0.05) {
+                clearInterval(flyInterval);
+                playTone(120, 'sawtooth', 0.4);
+                alert("फ्लाइट क्रैश हो गई!");
+            }
+        }, 150);
+    }
+
+    // 16 बॉक्सेस वाला माइंड्स गेम
+    function initMinesBoard() {
+        let grid = document.getElementById('mines-grid');
+        grid.innerHTML = "";
+        document.getElementById('minds-msg').innerText = "";
+        for(let i=0; i<16; i++) {
+            let btn = document.createElement('button');
+            btn.innerText = "❓";
+            btn.style.cssText = "padding: 12px; background: #334155; border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;";
+            btn.onclick = function() { clickMineBox(this); };
+            grid.appendChild(btn);
+        }
+    }
+
+    function clickMineBox(btn) {
+        if(btn.innerText !== "❓") return;
+        playClick();
+        let isBomb = Math.random() < 0.25; // 25% चांस बम का
         if(isBomb) {
             btn.style.background = "#ef4444";
             btn.innerText = "💥";
-            document.getElementById('minds-msg').innerText = "बूम! माइंस निकल आया, गेम ओवर।";
+            playTone(150, 'sawtooth', 0.3);
+            document.getElementById('minds-msg').innerText = "बूम! बम फूट गया, गेम ओवर।";
         } else {
             btn.style.background = "#22c55e";
-            btn.innerText = "💰";
-            document.getElementById('minds-msg').innerText = "बधाई हो! आपने कैश जीत लिया।";
+            btn.innerText = "🪙";
+            playWinTune();
+            document.getElementById('minds-msg').innerText = "शानदार! आपने कॉइन जीत लिया।";
         }
+    }
+
+    function resetMines() {
+        playClick();
+        initMinesBoard();
     }
 </script>
 </body>
 </html>
+
