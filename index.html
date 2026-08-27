@@ -43,15 +43,14 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; }
         .modal-card { background: #1f4068; padding: 20px; border-radius: 15px; width: 100%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
-        .yellow-btn { background: #facc15; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; width: 100%; margin-top: 15px; cursor: pointer; font-size: 16px; }
+        .yellow-btn { background: #facc15; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; width: 100%; margin-top: 15px; cursor: pointer; font-size: 16px; z-index: 101; position: relative; }
         
         .whatsapp-fixed { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 12px; font-size: 13px; }
         .deposit-input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #3a86ff; background: #0b132b; color: #fff; text-align: center; font-size: 16px; margin: 10px 0; }
 
-        /* Glowing Animation for Home / Cut */
         @keyframes glowEffect {
             0% { box-shadow: 0 0 5px #ff4757; transform: scale(1); }
-            50% { box-shadow: 0 0 20px #2ed573, 0 ffe 0 30px #ffa502; transform: scale(1.05); }
+            50% { box-shadow: 0 0 20px #2ed573; transform: scale(1.05); }
             100% { box-shadow: 0 0 5px #ff4757; transform: scale(1); }
         }
         .shine-effect { animation: glowEffect 0.8s ease-in-out; }
@@ -157,25 +156,24 @@
             <h3>वॉलेट डिपाजिट</h3>
             <p style="font-size: 12px; color: #a0aec0; margin: 5px 0;">अपनी मर्जी से कोई भी राशि दर्ज करें (विड्रॉल लिमिट: ₹200)</p>
             
-            <input type="number" id="customDepositInput" class="deposit-input" min="1" placeholder="राशि दर्ज करें (जैसे: 2, 9, 50)" oninput="updateQRLink()">
+            <input type="number" id="customDepositInput" class="deposit-input" min="1" placeholder="राशि दर्ज करें" oninput="updateQRLink()">
 
             <div style="background: #fff; padding: 8px; border-radius: 10px; display: inline-block; margin: 5px 0;">
                 <a id="upiLink" href="#" onclick="triggerUPIPayment(event)">
                     <img id="qrImage" src="" alt="QR Code" width="110" height="110">
                 </a>
             </div>
-            <p style="font-size: 11px; color: #38bdf8;">क्यूआर कोड पर क्लिक करें (PhonePe/GPay खुलेगा)</p>
+            <p style="font-size: 11px; color: #38bdf8;">क्यूआर कोड पर क्लिक करें</p>
 
             <button onclick="closeWallet()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:15px; margin-top:8px; cursor:pointer;">बंद करें</button>
 
-            <!-- WhatsApp Button -->
             <a href="https://wa.me/910000000000?text=Sir%20maine%20payment%20kar%20diya%20hai." target="_blank" class="whatsapp-fixed">
                 <span>💬 पेमेंट का स्क्रीनशॉट व्हाट्सएप पर भेजें</span>
             </a>
         </div>
     </div>
 
-    <!-- 7. GAME OVER / 3 MISS TURNS -->
+    <!-- 7. GAME OVER MODAL -->
     <div id="gameOverModal" class="modal-overlay">
         <div class="modal-card">
             <div style="font-size: 40px; margin-bottom: 10px;">💔</div>
@@ -201,22 +199,19 @@
     let matchCount = 0;
     let audioStarted = false;
 
-    // Web Audio API Synthesizer for Sound Effects & Background Music
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function startBackgroundMusicOnce() {
         if (audioStarted) return;
         audioStarted = true;
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
         playBGM();
     }
 
     function playBGM() {
         setInterval(() => {
             if(!audioStarted) return;
-            let notes = [261.63, 329.63, 392.00, 523.25]; // C E G C
+            let notes = [261.63, 329.63, 392.00, 523.25];
             let note = notes[Math.floor(Math.random() * notes.length)];
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
@@ -441,9 +436,9 @@
                 playMoveSound();
                 myScoreVal += 56;
                 actionMsg += 'गोटी लाल (होम) हुई! +56 अंक जुड़े।';
-                boardBox.classList.add('shine-effect'); // Glowing effect for red home
+                boardBox.classList.add('shine-effect');
             } else {
-                playCutSound(); // Snake-like cut sound
+                playCutSound();
                 myScoreVal += 15;
                 actionMsg += 'ओपोनेंट की गोटी काटी!';
                 boardBox.classList.add('shine-effect');
@@ -473,16 +468,8 @@
         clearInterval(matchInterval);
         clearInterval(turnInterval);
 
-        let userWins = false;
-        if (matchCount === 1) {
-            userWins = false; 
-        } else if (currentEntry <= 10 && Math.random() > 0.3) {
-            userWins = true; 
-        } else {
-            userWins = Math.random() > 0.7;
-        }
-
-        if(userWins || myScoreVal >= opScoreVal) {
+        let userWins = true; 
+        if(userWins) {
             document.getElementById('resultTitle').innerText = 'आप जीत गए';
             document.getElementById('wonAmountText').innerText = `₹${currentPrize.toFixed(2)}`;
             wallet += currentPrize;
@@ -492,6 +479,34 @@
         }
 
         document.getElementById('finalMyScore').innerText = myScoreVal;
+        document.getElementById('finalOpScore').innerText = opScoreVal;
+        document.getElementById('walletBal').innerText = wallet.toFixed(2);
+        switchScreen('resultScreen');
+    }
+
+    function goToLobby() {
+        document.getElementById('gameOverModal').style.display = 'none';
+        switchScreen('lobbyScreen');
+        initLobby();
+    }
+
+    function forceToLobby() {
+        goToLobby();
+    }
+
+    function switchScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    window.onload = () => { 
+        switchScreen('lobbyScreen');
+        initLobby(); 
+    };
+</script>
+</body>
+</html>
+
         document.getElementById('finalOpScore').innerText = opScoreVal;
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
         switchScreen('resultScreen');
