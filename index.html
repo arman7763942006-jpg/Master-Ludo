@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ludo Supreme - Armaan Edition</title>
+    <title>Ludo Supreme - Armaan Real Final</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: #0b132b; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .app-container { width: 100%; max-width: 420px; height: 100vh; background: linear-gradient(135deg, #1c2541, #0b132b); display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        .app-container { width: 100%; max-width: 420px; height: 100vh; background: #0b132b; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; position: absolute; top: 0; left: 0; background: #0b132b; z-index: 10; padding: 15px; overflow-y: auto; }
-        .screen.active { display: flex; }
+        .screen.active { display: flex !important; }
         
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
         .wallet-box { background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 14px; color: #ffd700; font-weight: bold; border: none; cursor: pointer; }
@@ -25,14 +26,11 @@
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top: 5px solid #22c55e; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .vs-container { display: flex; align-items: center; gap: 20px; margin: 20px 0; }
-        .player-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #22c55e; background: #333; display: flex; justify-content: center; align-items: center; font-size: 24px; }
-
         .game-header { display: flex; justify-content: space-between; align-items: center; background: #162447; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; }
         .pot-box { background: #1f4068; padding: 5px 15px; border-radius: 15px; color: #ffd700; font-weight: bold; font-size: 14px; border: 1px solid #ffd700; }
         .timer-box { font-family: monospace; font-size: 18px; color: #4ade80; font-weight: bold; background: #000; padding: 4px 10px; border-radius: 5px; }
         
-        .board-area { width: 100%; aspect-ratio: 1; background: #1b2a4a; border-radius: 10px; position: relative; display: flex; justify-content: center; align-items: center; border: 2px solid #3a86ff; overflow: hidden; }
+        .board-area { width: 100%; aspect-ratio: 1; background: #1b2a4a; border-radius: 10px; display: flex; justify-content: center; align-items: center; border: 2px solid #3a86ff; text-align: center; padding: 20px; }
         .score-display-panel { display: flex; justify-content: space-around; width: 100%; margin: 10px 0; }
         .score-card { background: #1f4068; padding: 8px 15px; border-radius: 8px; text-align: center; width: 45%; border: 1px solid rgba(255,255,255,0.1); }
         .score-card h4 { font-size: 12px; color: #a0aec0; }
@@ -43,20 +41,13 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; }
         .modal-card { background: #1f4068; padding: 20px; border-radius: 15px; width: 100%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
-        .yellow-btn { background: #facc15; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; width: 100%; margin-top: 15px; cursor: pointer; font-size: 16px; z-index: 101; position: relative; }
+        .yellow-btn { background: #facc15; color: #000; border: none; padding: 12px 20px; border-radius: 20px; font-weight: bold; width: 100%; margin-top: 15px; cursor: pointer; font-size: 16px; }
         
         .whatsapp-fixed { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 12px; font-size: 13px; }
         .deposit-input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #3a86ff; background: #0b132b; color: #fff; text-align: center; font-size: 16px; margin: 10px 0; }
-
-        @keyframes glowEffect {
-            0% { box-shadow: 0 0 5px #ff4757; transform: scale(1); }
-            50% { box-shadow: 0 0 20px #2ed573; transform: scale(1.05); }
-            100% { box-shadow: 0 0 5px #ff4757; transform: scale(1); }
-        }
-        .shine-effect { animation: glowEffect 0.8s ease-in-out; }
     </style>
 </head>
-<body onclick="startBackgroundMusicOnce()">
+<body>
 
 <div class="app-container">
 
@@ -64,7 +55,7 @@
     <div id="lobbyScreen" class="screen active">
         <div class="header">
             <h3>Ludo Supreme (Armaan)</h3>
-            <button class="wallet-box" onclick="openWallet()">₹<span id="walletBal">0</span></button>
+            <button class="wallet-box" onclick="openWallet()">₹<span id="walletBal">10.00</span></button>
         </div>
 
         <div class="banner">
@@ -76,26 +67,22 @@
         <div id="tournamentsList"></div>
     </div>
 
-    <!-- 2. COUNTDOWN -->
+    <!-- 2. COUNTDOWN SCREEN -->
     <div id="countdownScreen" class="screen center-screen">
         <div style="font-size: 50px;">⏳</div>
         <h2 style="color: #4ade80;">खेल शुरू हो रहा है...</h2>
-        <h1 id="countTimer" style="font-size: 40px; font-family: monospace;">00:03</h1>
+        <h1 id="countTimer" style="font-size: 40px; font-family: monospace;">03</h1>
     </div>
 
-    <!-- 3. SEARCHING -->
+    <!-- 3. SEARCHING SCREEN -->
     <div id="searchingScreen" class="screen center-screen">
         <h3>प्लेयर्स ढूँढ रहे हैं...</h3>
         <div class="spinner"></div>
-        <div class="vs-container">
-            <div class="player-avatar">🟢</div>
-            <h2 style="color: #ffd700;">VS</h2>
-            <div class="player-avatar" id="botAvatar">🤖</div>
-        </div>
-        <p id="botNameText" style="color: #a0aec0; font-size: 14px;">ऑनलाइन ओपोनेंट खोजा जा रहा है...</p>
+        <div style="font-size: 20px; color: #ffd700; font-weight: bold; margin: 15px 0;">VS 🤖 ओपोनेंट</div>
+        <p style="color: #a0aec0; font-size: 14px;">तैयार हो जाइए...</p>
     </div>
 
-    <!-- 4. LIVE BOARD -->
+    <!-- 4. BOARD SCREEN -->
     <div id="boardScreen" class="screen">
         <div class="game-header">
             <div class="pot-box">🏆 पॉट: ₹<span id="activePot">2.00</span></div>
@@ -113,18 +100,17 @@
             </div>
         </div>
 
-        <div class="board-area" id="boardBox">
-            <div style="text-align: center; padding: 20px;">
+        <div class="board-area">
+            <div>
                 <p style="font-size: 13px; color: #94a3b8;">गोतियाँ स्टार पॉइंट पर हैं</p>
-                <h3 style="color: #38bdf8;">🎲 लाइव लूडो बोर्ड</h3>
-                <p id="boardActionLog" style="font-size: 12px; color: #4ade80; margin-top: 10px;"></p>
+                <h3 style="color: #38bdf8; margin: 10px 0;">🎲 लाइव लूडो बोर्ड</h3>
+                <p id="boardActionLog" style="font-size: 12px; color: #4ade80;"></p>
             </div>
         </div>
 
         <div class="dice-section">
             <div>
-                <p style="font-size: 12px; color: #a0aec0;">टर्न टाइमर</p>
-                <h3 id="turnTimer" style="color: #f87171;">10s</h3>
+                <p style="font-size: 12px; color: #a0aec0;">चाल चलें</p>
             </div>
             <button class="dice-btn" onclick="rollDice()">पासा फेंके</button>
         </div>
@@ -142,7 +128,7 @@
                 <span id="finalMyScore">111</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 8px;">
-                <span id="finalOpName">2nd: Oponent</span>
+                <span>2nd: Oponent</span>
                 <span id="finalOpScore">40</span>
             </div>
         </div>
@@ -150,11 +136,11 @@
         <button class="yellow-btn" onclick="goToLobby()">लॉबी पे जायें</button>
     </div>
 
-    <!-- 6. WALLET & QR DEPOSIT MODAL -->
+    <!-- 6. WALLET MODAL -->
     <div id="walletModal" class="modal-overlay">
         <div class="modal-card">
             <h3>वॉलेट डिपाजिट</h3>
-            <p style="font-size: 12px; color: #a0aec0; margin: 5px 0;">अपनी मर्जी से कोई भी राशि दर्ज करें (विड्रॉल लिमिट: ₹200)</p>
+            <p style="font-size: 12px; color: #a0aec0; margin: 5px 0;">कोई भी राशि दर्ज करें</p>
             
             <input type="number" id="customDepositInput" class="deposit-input" min="1" placeholder="राशि दर्ज करें" oninput="updateQRLink()">
 
@@ -168,121 +154,32 @@
             <button onclick="closeWallet()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:15px; margin-top:8px; cursor:pointer;">बंद करें</button>
 
             <a href="https://wa.me/910000000000?text=Sir%20maine%20payment%20kar%20diya%20hai." target="_blank" class="whatsapp-fixed">
-                <span>💬 पेमेंट का स्क्रीनशॉट व्हाट्सएप पर भेजें</span>
+                <span>💬 पेमेंट का व्हाट्सएप पर स्क्रीनशॉट भेजें</span>
             </a>
-        </div>
-    </div>
-
-    <!-- 7. GAME OVER MODAL -->
-    <div id="gameOverModal" class="modal-overlay">
-        <div class="modal-card">
-            <div style="font-size: 40px; margin-bottom: 10px;">💔</div>
-            <h3 style="color: #f87171;">गेम ओवर</h3>
-            <p style="font-size: 13px; color: #cbd5e1; margin: 15px 0;">3 चाल मिस होने के कारण आपको गेम से बाहर किया गया है।</p>
-            <button class="yellow-btn" onclick="forceToLobby()">लॉबी में जाये</button>
         </div>
     </div>
 
 </div>
 
 <script>
-    let wallet = 0;
-    let currentEntry = 0;
-    let currentPrize = 0;
-    let currentTimerSec = 180;
-    let matchInterval = null;
-    let turnInterval = null;
-    let turnTimeLeft = 10;
-    let missedTurnsCount = 0;
+    let wallet = 10.00;
+    let currentPrize = 2.00;
     let myScoreVal = 0;
     let opScoreVal = 0;
-    let matchCount = 0;
-    let audioStarted = false;
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function startBackgroundMusicOnce() {
-        if (audioStarted) return;
-        audioStarted = true;
-        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-        playBGM();
-    }
-
-    function playBGM() {
-        setInterval(() => {
-            if(!audioStarted) return;
-            let notes = [261.63, 329.63, 392.00, 523.25];
-            let note = notes[Math.floor(Math.random() * notes.length)];
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = note;
-            gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.5);
-        }, 3000);
-    }
-
-    function playDiceSound() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
-    }
-
-    function playMoveSound() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-    }
-
-    function playCutSound() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-    }
 
     const tournaments = [
-        { entry: 1, prize: 2, time: 180, label: '3 मिनट लूडो' },
-        { entry: 2, prize: 4, time: 180, label: '3 मिनट लूडो' },
-        { entry: 5, prize: 10, time: 300, label: '5 मिनट लूडो' },
-        { entry: 10, prize: 20, time: 600, label: '10 मिनट लूडो' },
-        { entry: 20, prize: 40, time: 600, label: '10 मिनट लूडो' },
-        { entry: 35, prize: 70, time: 600, label: '10 मिनट लूडो' },
-        { entry: 100, prize: 200, time: 600, label: '10 मिनट लूडो' }
+        { entry: 1, prize: 2, label: '3 मिनट लूडो' },
+        { entry: 2, prize: 4, label: '3 मिनट लूडो' },
+        { entry: 5, prize: 10, label: '5 मिनट लूडो' },
+        { entry: 10, prize: 20, label: '10 मिनट लूडो' },
+        { entry: 20, prize: 40, label: '10 मिनट लूडो' },
+        { entry: 35, prize: 70, label: '10 मिनट लूडो' },
+        { entry: 100, prize: 200, label: '10 मिनट लूडो' }
     ];
 
     function initLobby() {
         const list = document.getElementById('tournamentsList');
+        if(!list) return;
         list.innerHTML = '';
         tournaments.forEach(t => {
             list.innerHTML += `
@@ -296,7 +193,7 @@
                             विजेता राशि<br>
                             <span class="prize-amount">₹${t.prize.toFixed(2)}</span>
                         </div>
-                        <button class="entry-btn" onclick="startMatch(${t.entry}, ${t.prize}, ${t.time})">₹${t.entry}</button>
+                        <button class="entry-btn" onclick="startMatch(${t.entry}, ${t.prize})">₹${t.entry}</button>
                     </div>
                 </div>
             `;
@@ -304,10 +201,25 @@
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
     }
 
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => {
+            s.classList.remove('active');
+        });
+        let target = document.getElementById(screenId);
+        if(target) {
+            target.classList.add('active');
+        }
+    }
+
+    function goToLobby() {
+        switchScreen('lobbyScreen');
+        initLobby();
+    }
+
     function shareApp() {
-        wallet += 2; 
-        alert('शेयर सफल! आपके वॉलेट में ₹2 जोड़ दिए गए हैं।');
+        wallet += 2.00;
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
+        alert('शेयर सफल! आपके वॉलेट में ₹2 जोड़ दिए गए हैं।');
     }
 
     function openWallet() {
@@ -330,205 +242,67 @@
         e.preventDefault();
         let amtField = document.getElementById('customDepositInput').value;
         let amt = (amtField && parseFloat(amtField) >= 1) ? parseFloat(amtField) : 1;
-        let upiString = `upi://pay?pa=armaan@ybl&pn=Armaan&am=${amt}&cu=INR`;
-        window.location.href = upiString; 
+        window.location.href = `upi://pay?pa=armaan@ybl&pn=Armaan&am=${amt}&cu=INR`;
     }
 
-    function startMatch(entry, prize, time) {
+    function startMatch(entry, prize) {
         if(wallet < entry) {
-            alert('वॉलेट में पर्याप्त बैलेंस नहीं है! कृपया बैलेंस जोड़ें।');
+            alert('वॉलेट में पर्याप्त बैलेंस नहीं है!');
             openWallet();
             return;
         }
         wallet -= entry;
-        currentEntry = entry;
         currentPrize = prize;
-        currentTimerSec = time;
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
 
         switchScreen('countdownScreen');
-        let count = 3;
-        let cInterval = setInterval(() => {
-            count--;
-            if(count <= 0) {
-                clearInterval(cInterval);
-                startSearching();
-            }
-        }, 1000);
-    }
-
-    function startSearching() {
-        switchScreen('searchingScreen');
+        
         setTimeout(() => {
-            let opponentName = 'Aman_Ludo';
-            initBoard(opponentName);
-        }, 5000);
+            switchScreen('searchingScreen');
+            setTimeout(() => {
+                initBoard();
+            }, 2000);
+        }, 1500);
     }
 
-    function initBoard(opName) {
+    function initBoard() {
         switchScreen('boardScreen');
         document.getElementById('activePot').innerText = currentPrize.toFixed(2);
-        document.getElementById('opponentNameLabel').innerText = opName;
-        document.getElementById('finalOpName').innerText = `2nd: ${opName}`;
-        
-        myScoreVal = 0;
-        opScoreVal = 0;
-        missedTurnsCount = 0;
+        myScoreVal = Math.floor(Math.random() * 30) + 10;
+        opScoreVal = Math.floor(Math.random() * 20);
         document.getElementById('myScore').innerText = myScoreVal;
         document.getElementById('opScore').innerText = opScoreVal;
-        document.getElementById('boardActionLog').innerText = 'गेम शुरू! गोतियाँ स्टार पॉइंट पर हैं।';
-
-        startMatchTimer();
-        startTurnTimer();
-    }
-
-    function startMatchTimer() {
-        clearInterval(matchInterval);
-        let timeLeft = currentTimerSec;
-        matchInterval = setInterval(() => {
-            timeLeft--;
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
-            document.getElementById('matchTimer').innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
-            if(timeLeft <= 0) {
-                clearInterval(matchInterval);
-                clearInterval(turnInterval);
-                endGame();
-            }
-        }, 1000);
-    }
-
-    function startTurnTimer() {
-        clearInterval(turnInterval);
-        turnTimeLeft = 10;
-        document.getElementById('turnTimer').innerText = `${turnTimeLeft}s`;
-        
-        turnInterval = setInterval(() => {
-            turnTimeLeft--;
-            document.getElementById('turnTimer').innerText = `${turnTimeLeft}s`;
-            if(turnTimeLeft <= 0) {
-                missedTurnsCount++;
-                if(missedTurnsCount >= 3) {
-                    clearInterval(matchInterval);
-                    clearInterval(turnInterval);
-                    document.getElementById('gameOverModal').style.display = 'flex';
-                } else {
-                    alert(`चाल मिस हुई! (${missedTurnsCount}/3 मिस)`);
-                    startTurnTimer();
-                }
-            }
-        }, 1000);
+        document.getElementById('boardActionLog').innerText = 'गेम शुरू! पासा फेंके।';
     }
 
     function rollDice() {
-        playDiceSound();
-        startTurnTimer();
-        matchCount++;
-
         let diceVal = Math.floor(Math.random() * 6) + 1;
-        let actionMsg = `पासा आया: ${diceVal}. `;
-
-        let boardBox = document.getElementById('boardBox');
-        boardBox.classList.remove('shine-effect');
-
-        if (diceVal >= 4) {
-            if (Math.random() > 0.5) {
-                playMoveSound();
-                myScoreVal += 56;
-                actionMsg += 'गोटी लाल (होम) हुई! +56 अंक जुड़े।';
-                boardBox.classList.add('shine-effect');
-            } else {
-                playCutSound();
-                myScoreVal += 15;
-                actionMsg += 'ओपोनेंट की गोटी काटी!';
-                boardBox.classList.add('shine-effect');
-            }
-        } else {
-            playMoveSound();
-            let cutPenalty = 10;
-            if(myScoreVal >= cutPenalty) {
-                myScoreVal -= cutPenalty;
-                actionMsg += `आपकी गोटी कटी! -${cutPenalty} अंक घटे।`;
-            } else {
-                opScoreVal += 20;
-            }
-        }
-
+        myScoreVal += diceVal * 10;
         document.getElementById('myScore').innerText = myScoreVal;
-        document.getElementById('opScore').innerText = opScoreVal;
-        document.getElementById('boardActionLog').innerText = actionMsg;
+        document.getElementById('boardActionLog').innerText = `पासा आया: ${diceVal}. गोटी आगे बढ़ी!`;
 
         setTimeout(() => {
-            opScoreVal += Math.floor(Math.random() * 20);
-            document.getElementById('opScore').innerText = opScoreVal;
-        }, 1000);
+            endGame();
+        }, 1200);
     }
 
     function endGame() {
-        clearInterval(matchInterval);
-        clearInterval(turnInterval);
-
-        let userWins = true; 
-        if(userWins) {
-            document.getElementById('resultTitle').innerText = 'आप जीत गए';
-            document.getElementById('wonAmountText').innerText = `₹${currentPrize.toFixed(2)}`;
-            wallet += currentPrize;
-        } else {
-            document.getElementById('resultTitle').innerText = 'आप हार गए';
-            document.getElementById('wonAmountText').innerText = `₹0.00`;
-        }
-
+        wallet += currentPrize;
+        document.getElementById('wonAmountText').innerText = `₹${currentPrize.toFixed(2)}`;
         document.getElementById('finalMyScore').innerText = myScoreVal;
         document.getElementById('finalOpScore').innerText = opScoreVal;
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
+        
         switchScreen('resultScreen');
     }
 
-    function goToLobby() {
-        document.getElementById('gameOverModal').style.display = 'none';
+    window.onload = function() {
         switchScreen('lobbyScreen');
         initLobby();
-    }
-
-    function forceToLobby() {
-        goToLobby();
-    }
-
-    function switchScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    window.onload = () => { 
-        switchScreen('lobbyScreen');
-        initLobby(); 
     };
 </script>
 </body>
 </html>
 
-        document.getElementById('finalOpScore').innerText = opScoreVal;
-        document.getElementById('walletBal').innerText = wallet.toFixed(2);
-        switchScreen('resultScreen');
-    }
 
-    function goToLobby() {
-        document.getElementById('gameOverModal').style.display = 'none';
-        switchScreen('lobbyScreen');
-        initLobby();
-    }
-
-    function forceToLobby() {
-        goToLobby();
-    }
-
-    function switchScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    window.onload = () => { initLobby(); };
-</script>
-</body>
-</html>
-
+    
