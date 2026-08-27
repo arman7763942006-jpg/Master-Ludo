@@ -3,46 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ludo Supreme - Armaan Real Final</title>
+    <title>Ludo Supreme - Fresh Clean</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: #0b132b; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .app-container { width: 100%; max-width: 420px; height: 100vh; background: #0b132b; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
-        
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; position: absolute; top: 0; left: 0; background: #0b132b; z-index: 10; padding: 15px; overflow-y: auto; }
         .screen.active { display: flex !important; }
-        
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
         .wallet-box { background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 14px; color: #ffd700; font-weight: bold; border: none; cursor: pointer; }
-
         .banner { background: #3a86ff; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
         .tournament-card { background: #1f4068; border-radius: 10px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .tournament-info { display: flex; justify-content: space-between; font-size: 13px; color: #a0aec0; margin-bottom: 8px; }
         .match-row { display: flex; justify-content: space-between; align-items: center; }
         .prize-amount { font-size: 18px; font-weight: bold; color: #4ade80; }
         .entry-btn { background: #22c55e; color: #fff; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 15px; }
-
         .center-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; gap: 20px; }
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top: 5px solid #22c55e; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .game-header { display: flex; justify-content: space-between; align-items: center; background: #162447; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; }
         .pot-box { background: #1f4068; padding: 5px 15px; border-radius: 15px; color: #ffd700; font-weight: bold; font-size: 14px; border: 1px solid #ffd700; }
         .timer-box { font-family: monospace; font-size: 18px; color: #4ade80; font-weight: bold; background: #000; padding: 4px 10px; border-radius: 5px; }
-        
         .board-area { width: 100%; aspect-ratio: 1; background: #1b2a4a; border-radius: 10px; display: flex; justify-content: center; align-items: center; border: 2px solid #3a86ff; text-align: center; padding: 20px; }
         .score-display-panel { display: flex; justify-content: space-around; width: 100%; margin: 10px 0; }
         .score-card { background: #1f4068; padding: 8px 15px; border-radius: 8px; text-align: center; width: 45%; border: 1px solid rgba(255,255,255,0.1); }
         .score-card h4 { font-size: 12px; color: #a0aec0; }
         .score-card .val { font-size: 20px; font-weight: bold; color: #fff; }
-
         .dice-section { display: flex; justify-content: space-between; align-items: center; background: #162447; padding: 12px; border-radius: 10px; margin-top: auto; }
         .dice-btn { background: #3a86ff; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; }
         .modal-card { background: #1f4068; padding: 20px; border-radius: 15px; width: 100%; max-width: 320px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
         .yellow-btn { background: #facc15; color: #000; border: none; padding: 12px 20px; border-radius: 20px; font-weight: bold; width: 100%; margin-top: 15px; cursor: pointer; font-size: 16px; }
-        
         .whatsapp-fixed { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 12px; font-size: 13px; }
         .deposit-input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #3a86ff; background: #0b132b; color: #fff; text-align: center; font-size: 16px; margin: 10px 0; }
     </style>
@@ -50,19 +41,16 @@
 <body>
 
 <div class="app-container">
-
     <!-- 1. LOBBY SCREEN -->
     <div id="lobbyScreen" class="screen active">
         <div class="header">
             <h3>Ludo Supreme (Armaan)</h3>
             <button class="wallet-box" onclick="openWallet()">₹<span id="walletBal">10.00</span></button>
         </div>
-
         <div class="banner">
             <p style="font-size: 14px; font-weight: bold;">रिफरल ऑफर: शेयर करें और तुरंत ₹2 पाएं!</p>
             <button onclick="shareApp()" style="margin-top:8px; background:#fff; color:#3a86ff; border:none; padding:5px 12px; border-radius:15px; font-weight:bold; cursor:pointer;">शेयर करें</button>
         </div>
-
         <h4 style="margin-bottom: 10px; font-size: 15px; color: #cbd5e1;">टूर्नामेंट्स (विड्रॉल लिमिट: ₹200)</h4>
         <div id="tournamentsList"></div>
     </div>
@@ -88,7 +76,6 @@
             <div class="pot-box">🏆 पॉट: ₹<span id="activePot">2.00</span></div>
             <div class="timer-box" id="matchTimer">03:00</div>
         </div>
-
         <div class="score-display-panel">
             <div class="score-card">
                 <h4>आप</h4>
@@ -99,7 +86,6 @@
                 <div class="val" id="opScore">0</div>
             </div>
         </div>
-
         <div class="board-area">
             <div>
                 <p style="font-size: 13px; color: #94a3b8;">गोतियाँ स्टार पॉइंट पर हैं</p>
@@ -107,11 +93,8 @@
                 <p id="boardActionLog" style="font-size: 12px; color: #4ade80;"></p>
             </div>
         </div>
-
         <div class="dice-section">
-            <div>
-                <p style="font-size: 12px; color: #a0aec0;">चाल चलें</p>
-            </div>
+            <div><p style="font-size: 12px; color: #a0aec0;">चाल चलें</p></div>
             <button class="dice-btn" onclick="rollDice()">पासा फेंके</button>
         </div>
     </div>
@@ -121,7 +104,6 @@
         <div style="font-size: 40px;">👑</div>
         <h2 style="color: #ffd700; margin-bottom: 10px;" id="resultTitle">आप जीत गए</h2>
         <h3 id="wonAmountText" style="color: #4ade80; font-size: 24px; margin-bottom: 20px;">₹2.00</h3>
-        
         <div style="width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <span>1st: आप</span>
@@ -132,7 +114,6 @@
                 <span id="finalOpScore">40</span>
             </div>
         </div>
-
         <button class="yellow-btn" onclick="goToLobby()">लॉबी पे जायें</button>
     </div>
 
@@ -141,24 +122,19 @@
         <div class="modal-card">
             <h3>वॉलेट डिपाजिट</h3>
             <p style="font-size: 12px; color: #a0aec0; margin: 5px 0;">कोई भी राशि दर्ज करें</p>
-            
             <input type="number" id="customDepositInput" class="deposit-input" min="1" placeholder="राशि दर्ज करें" oninput="updateQRLink()">
-
             <div style="background: #fff; padding: 8px; border-radius: 10px; display: inline-block; margin: 5px 0;">
                 <a id="upiLink" href="#" onclick="triggerUPIPayment(event)">
                     <img id="qrImage" src="" alt="QR Code" width="110" height="110">
                 </a>
             </div>
             <p style="font-size: 11px; color: #38bdf8;">क्यूआर कोड पर क्लिक करें</p>
-
             <button onclick="closeWallet()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:15px; margin-top:8px; cursor:pointer;">बंद करें</button>
-
             <a href="https://wa.me/910000000000?text=Sir%20maine%20payment%20kar%20diya%20hai." target="_blank" class="whatsapp-fixed">
                 <span>💬 पेमेंट का व्हाट्सएप पर स्क्रीनशॉट भेजें</span>
             </a>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -296,13 +272,11 @@
         switchScreen('resultScreen');
     }
 
-    window.onload = function() {
+    // Forcefully start with lobby screen on load
+    window.addEventListener('DOMContentLoaded', () => {
         switchScreen('lobbyScreen');
         initLobby();
-    };
+    });
 </script>
 </body>
 </html>
-
-
-    
