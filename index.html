@@ -360,5 +360,164 @@
             alert("मैच समाप्त कर दिया गया है।");
         }
     </script>
+<!-- === अरमान के गेम्स का नया सेक्शन (सबसे नीचे जोड़ा गया) === -->
+<div style="background: #111827; padding: 20px; border-radius: 12px; margin-top: 20px; border: 2px solid #f59e0b; color: white; text-align: center;">
+    <h2 style="color: #facc15;">🎲 Armaan Live Gaming Arena 🚀</h2>
+    <p style="font-size: 13px; color: #94a3b8;">नीचे दिए गए गेम्स चालू हैं, क्लिक करके खेलें:</p>
+
+    <!-- गेम चुनने के बटन -->
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0;">
+        <button onclick="showGame('ludo')" style="background: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">👑 लूडो (Ludo)</button>
+        <button onclick="showGame('color')" style="background: #16a34a; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">🎨 कलर प्रेडिक्शन</button>
+        <button onclick="showGame('aviator')" style="background: #f97316; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">🚀 एविएटर (Aviator)</button>
+        <button onclick="showGame('minds')" style="background: #a855f7; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">💣 माइंड्स गेम (Minds)</button>
+    </div>
+
+    <!-- 1. लूडो बोर्ड और 10 सेकंड टाइमर वाला एरिया -->
+    <div id="box-ludo" class="game-box" style="display:none; border: 2px solid #ef4444; padding: 15px; border-radius: 8px; margin-top: 10px;">
+        <h3 style="color: #f87171; margin-top:0;">Royal Ludo Board</h3>
+        <p style="font-size: 13px;">पासा चलने का टाइमर: <span id="ludo-timer" style="color: #facc15; font-weight: bold;">10</span> सेकंड | मिस: <span id="ludo-miss">0</span>/3</p>
+        
+        <!-- यूनिक बड़ा लूडो बोर्ड (लाल, पीला, हरा, नीला) -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 220px; height: 220px; margin: 10px auto; background: #0f172a; padding: 6px; border-radius: 6px; border: 2px solid #f59e0b;">
+            <div style="background: #dc2626; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 4px;">लाल घर</div>
+            <div style="background: #16a34a; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 4px;">हरा घर</div>
+            <div style="background: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 4px;">नीला घर</div>
+            <div style="background: #ca8a04; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 4px;">पीला घर</div>
+        </div>
+        <p>पासा नंबर: <span id="ludo-dice" style="font-size: 24px; color: #4ade80; font-weight: bold;">-</span></p>
+        <button onclick="rollLudoDice()" style="background: #10b981; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer;">पासा फेंके (Roll)</button>
+    </div>
+
+    <!-- 2. कलर प्रेडिक्शन (10 सेकंड रिजल्ट टाइमर वाला) -->
+    <div id="box-color" class="game-box" style="display:none; border: 2px solid #38bdf8; padding: 15px; border-radius: 8px; margin-top: 10px;">
+        <h3 style="color: #38bdf8; margin-top:0;">Color Prediction Game</h3>
+        <p style="font-size: 13px;">अगले रिजल्ट का समय: <span id="color-timer" style="color: #facc15; font-weight: bold;">10</span> सेकंड</p>
+        <div style="display: flex; justify-content: center; gap: 10px; margin: 10px 0;">
+            <button onclick="pickColor('लाल (Red)')" style="background: #ef4444; color: white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">लाल</button>
+            <button onclick="pickColor('हरा (Green)')" style="background: #22c55e; color: white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">हरा</button>
+            <button onclick="pickColor('बैंगनी (Violet)')" style="background: #a855f7; color: white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">बैंगनी</button>
+        </div>
+        <p id="color-result" style="font-weight: bold; color: #4ade80;"></p>
+    </div>
+
+    <!-- 3. एविएटर गेम -->
+    <div id="box-aviator" class="game-box" style="display:none; border: 2px solid #f97316; padding: 15px; border-radius: 8px; margin-top: 10px;">
+        <h3 style="color: #f97316; margin-top:0;">Aviator Flight</h3>
+        <p style="font-size: 28px; font-weight: bold; color: #4ade80;" id="aviator-multi">1.00x</p>
+        <button onclick="startAviatorGame()" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer;">रॉकेट उड़ाएं</button>
+    </div>
+
+    <!-- 4. माइंड्स गेम -->
+    <div id="box-minds" class="game-box" style="display:none; border: 2px solid #a855f7; padding: 15px; border-radius: 8px; margin-top: 10px;">
+        <h3 style="color: #a855f7; margin-top:0;">Minds / Mines Game</h3>
+        <p style="font-size: 13px;">सेफ बॉक्स चुनें:</p>
+        <div style="display: flex; justify-content: center; gap: 8px; margin: 10px 0;">
+            <button onclick="clickMindsBox(this)" style="padding: 15px 20px; background: #334155; border:none; color:white; border-radius:6px; cursor:pointer;">❓</button>
+            <button onclick="clickMindsBox(this)" style="padding: 15px 20px; background: #334155; border:none; color:white; border-radius:6px; cursor:pointer;">❓</button>
+            <button onclick="clickMindsBox(this)" style="padding: 15px 20px; background: #334155; border:none; color:white; border-radius:6px; cursor:pointer;">❓</button>
+        </div>
+        <p id="minds-msg" style="font-size: 13px; color: #38bdf8;"></p>
+    </div>
+</div>
+
+<script>
+    let globalTimer = null;
+
+    function showGame(name) {
+        document.querySelectorAll('.game-box').forEach(b => b.style.display = 'none');
+        clearInterval(globalTimer);
+        
+        if(name === 'ludo') {
+            document.getElementById('box-ludo').style.display = 'block';
+            startLudoCountdown();
+        } else if(name === 'color') {
+            document.getElementById('box-color').style.display = 'block';
+            startColorCountdown();
+        } else if(name === 'aviator') {
+            document.getElementById('box-aviator').style.display = 'block';
+        } else if(name === 'minds') {
+            document.getElementById('box-minds').style.display = 'block';
+        }
+    }
+
+    // लूडो 10 सेकंड टाइमर और 3 मिस नियम
+    let ludoSec = 10;
+    let ludoMissCount = 0;
+    function startLudoCountdown() {
+        ludoSec = 10;
+        document.getElementById('ludo-timer').innerText = ludoSec;
+        clearInterval(globalTimer);
+        globalTimer = setInterval(() => {
+            ludoSec--;
+            document.getElementById('ludo-timer').innerText = ludoSec;
+            if(ludoSec <= 0) {
+                ludoMissCount++;
+                document.getElementById('ludo-miss').innerText = ludoMissCount;
+                if(ludoMissCount >= 3) {
+                    alert("समय समाप्त! आपने 3 बार पासा नहीं फेंका, इसलिए गेम से बाहर कर दिए गए हैं।");
+                    document.getElementById('box-ludo').style.display = 'none';
+                } else {
+                    startLudoCountdown();
+                }
+            }
+        }, 1000);
+    }
+    function rollLudoDice() {
+        let val = Math.floor(Math.random() * 6) + 1;
+        document.getElementById('ludo-dice').innerText = val;
+        startLudoCountdown(); // पासा फेंकते ही टाइमर रीसेट
+    }
+
+    // कलर प्रेडिक्शन 10 सेकंड रिजल्ट टाइमर
+    let colorSec = 10;
+    function startColorCountdown() {
+        colorSec = 10;
+        document.getElementById('color-timer').innerText = colorSec;
+        document.getElementById('color-result').innerText = "";
+        clearInterval(globalTimer);
+        globalTimer = setInterval(() => {
+            colorSec--;
+            document.getElementById('color-timer').innerText = colorSec;
+            if(colorSec <= 0) {
+                let options = ['लाल (Red)', 'हरा (Green)', 'बैंगनी (Violet)'];
+                let winningColor = options[Math.floor(Math.random() * options.length)];
+                document.getElementById('color-result').innerText = "रिजल्ट आया: " + winningColor;
+                setTimeout(startColorCountdown, 3000); // 3 सेकंड रुककर अगला 10 सेकंड चालू
+            }
+        }, 1000);
+    }
+    function pickColor(c) {
+        alert("आपने " + c + " चुना है। 10 सेकंड के अंदर आने वाले रिजल्ट का इंतज़ार करें!");
+    }
+
+    // एविएटर गेम लॉजिक
+    function startAviatorGame() {
+        let m = 1.00;
+        let mBox = document.getElementById('aviator-multi');
+        let flyInterval = setInterval(() => {
+            m += 0.04;
+            mBox.innerText = m.toFixed(2) + "x";
+            if(Math.random() < 0.06) {
+                clearInterval(flyInterval);
+                alert("फ्लाइट क्रैश हो गई! (Fly Away)");
+            }
+        }, 150);
+    }
+
+    // माइंड्स गेम लॉजिक
+    function clickMindsBox(btn) {
+        let isBomb = Math.random() < 0.3;
+        if(isBomb) {
+            btn.style.background = "#ef4444";
+            btn.innerText = "💥";
+            document.getElementById('minds-msg').innerText = "बूम! माइंस निकल आया, गेम ओवर।";
+        } else {
+            btn.style.background = "#22c55e";
+            btn.innerText = "💰";
+            document.getElementById('minds-msg').innerText = "बधाई हो! आपने कैश जीत लिया।";
+        }
+    }
+</script>
 </body>
 </html>
