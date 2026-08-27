@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ludo Supreme - Fresh Clean</title>
+    <title>Ludo Supreme</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: #0b132b; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -41,7 +41,6 @@
 <body>
 
 <div class="app-container">
-    <!-- 1. LOBBY SCREEN -->
     <div id="lobbyScreen" class="screen active">
         <div class="header">
             <h3>Ludo Supreme (Armaan)</h3>
@@ -55,22 +54,17 @@
         <div id="tournamentsList"></div>
     </div>
 
-    <!-- 2. COUNTDOWN SCREEN -->
     <div id="countdownScreen" class="screen center-screen">
         <div style="font-size: 50px;">⏳</div>
         <h2 style="color: #4ade80;">खेल शुरू हो रहा है...</h2>
-        <h1 id="countTimer" style="font-size: 40px; font-family: monospace;">03</h1>
     </div>
 
-    <!-- 3. SEARCHING SCREEN -->
     <div id="searchingScreen" class="screen center-screen">
         <h3>प्लेयर्स ढूँढ रहे हैं...</h3>
         <div class="spinner"></div>
         <div style="font-size: 20px; color: #ffd700; font-weight: bold; margin: 15px 0;">VS 🤖 ओपोनेंट</div>
-        <p style="color: #a0aec0; font-size: 14px;">तैयार हो जाइए...</p>
     </div>
 
-    <!-- 4. BOARD SCREEN -->
     <div id="boardScreen" class="screen">
         <div class="game-header">
             <div class="pot-box">🏆 पॉट: ₹<span id="activePot">2.00</span></div>
@@ -82,7 +76,7 @@
                 <div class="val" id="myScore">0</div>
             </div>
             <div class="score-card">
-                <h4 id="opponentNameLabel">Oponent</h4>
+                <h4>Oponent</h4>
                 <div class="val" id="opScore">0</div>
             </div>
         </div>
@@ -94,45 +88,27 @@
             </div>
         </div>
         <div class="dice-section">
-            <div><p style="font-size: 12px; color: #a0aec0;">चाल चलें</p></div>
-            <button class="dice-btn" onclick="rollDice()">पासा फेंके</button>
+            <button class="dice-btn" style="width:100%;" onclick="rollDice()">पासा फेंके</button>
         </div>
     </div>
 
-    <!-- 5. WINNING SCREEN -->
     <div id="resultScreen" class="screen center-screen" style="background: radial-gradient(circle, #1e3a8a, #0b132b);">
         <div style="font-size: 40px;">👑</div>
-        <h2 style="color: #ffd700; margin-bottom: 10px;" id="resultTitle">आप जीत गए</h2>
+        <h2 style="color: #ffd700; margin-bottom: 10px;">आप जीत गए</h2>
         <h3 id="wonAmountText" style="color: #4ade80; font-size: 24px; margin-bottom: 20px;">₹2.00</h3>
-        <div style="width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <span>1st: आप</span>
-                <span id="finalMyScore">111</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 8px;">
-                <span>2nd: Oponent</span>
-                <span id="finalOpScore">40</span>
-            </div>
-        </div>
         <button class="yellow-btn" onclick="goToLobby()">लॉबी पे जायें</button>
     </div>
 
-    <!-- 6. WALLET MODAL -->
     <div id="walletModal" class="modal-overlay">
         <div class="modal-card">
             <h3>वॉलेट डिपाजिट</h3>
-            <p style="font-size: 12px; color: #a0aec0; margin: 5px 0;">कोई भी राशि दर्ज करें</p>
             <input type="number" id="customDepositInput" class="deposit-input" min="1" placeholder="राशि दर्ज करें" oninput="updateQRLink()">
             <div style="background: #fff; padding: 8px; border-radius: 10px; display: inline-block; margin: 5px 0;">
                 <a id="upiLink" href="#" onclick="triggerUPIPayment(event)">
                     <img id="qrImage" src="" alt="QR Code" width="110" height="110">
                 </a>
             </div>
-            <p style="font-size: 11px; color: #38bdf8;">क्यूआर कोड पर क्लिक करें</p>
             <button onclick="closeWallet()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:15px; margin-top:8px; cursor:pointer;">बंद करें</button>
-            <a href="https://wa.me/910000000000?text=Sir%20maine%20payment%20kar%20diya%20hai." target="_blank" class="whatsapp-fixed">
-                <span>💬 पेमेंट का व्हाट्सएप पर स्क्रीनशॉट भेजें</span>
-            </a>
         </div>
     </div>
 </div>
@@ -178,13 +154,9 @@
     }
 
     function switchScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => {
-            s.classList.remove('active');
-        });
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         let target = document.getElementById(screenId);
-        if(target) {
-            target.classList.add('active');
-        }
+        if(target) target.classList.add('active');
     }
 
     function goToLobby() {
@@ -232,13 +204,12 @@
         document.getElementById('walletBal').innerText = wallet.toFixed(2);
 
         switchScreen('countdownScreen');
-        
         setTimeout(() => {
             switchScreen('searchingScreen');
             setTimeout(() => {
                 initBoard();
-            }, 2000);
-        }, 1500);
+            }, 1500);
+        }, 1200);
     }
 
     function initBoard() {
@@ -255,28 +226,19 @@
         let diceVal = Math.floor(Math.random() * 6) + 1;
         myScoreVal += diceVal * 10;
         document.getElementById('myScore').innerText = myScoreVal;
-        document.getElementById('boardActionLog').innerText = `पासा आया: ${diceVal}. गोटी आगे बढ़ी!`;
-
+        document.getElementById('boardActionLog').innerText = `पासा आया: ${diceVal}`;
         setTimeout(() => {
-            endGame();
-        }, 1200);
+            wallet += currentPrize;
+            document.getElementById('wonAmountText').innerText = `₹${currentPrize.toFixed(2)}`;
+            document.getElementById('walletBal').innerText = wallet.toFixed(2);
+            switchScreen('resultScreen');
+        }, 1000);
     }
 
-    function endGame() {
-        wallet += currentPrize;
-        document.getElementById('wonAmountText').innerText = `₹${currentPrize.toFixed(2)}`;
-        document.getElementById('finalMyScore').innerText = myScoreVal;
-        document.getElementById('finalOpScore').innerText = opScoreVal;
-        document.getElementById('walletBal').innerText = wallet.toFixed(2);
-        
-        switchScreen('resultScreen');
-    }
-
-    // Forcefully start with lobby screen on load
-    window.addEventListener('DOMContentLoaded', () => {
+    window.onload = function() {
         switchScreen('lobbyScreen');
         initLobby();
-    });
+    };
 </script>
 </body>
 </html>
