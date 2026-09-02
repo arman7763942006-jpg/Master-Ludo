@@ -1,318 +1,106 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Ludo - Royal Balance & Payment Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #05070b; color: #f8fafc; padding: 20px; margin: 0; padding-bottom: 90px; }
-        .admin-container { max-width: 440px; margin: 0 auto; }
-        
-        .header { background: linear-gradient(135deg, #1e293b, #0f172a); padding: 24px; border-radius: 20px; text-align: center; border: 1px solid rgba(250, 204, 21, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); margin-bottom: 20px; }
-        .header h2 { margin: 0; color: #facc15; font-size: 24px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .header p { margin: 6px 0 0 0; font-size: 13px; color: #94a3b8; }
-        
-        .whatsapp-notice { background: rgba(6, 78, 59, 0.7); border: 1px solid #10b981; padding: 16px; border-radius: 16px; margin-bottom: 20px; font-size: 13px; color: #ecfdf5; line-height: 1.6; text-align: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15); }
-        
-        /* WhatsApp आइकॉन वाला बटन स्टाइल */
-        .whatsapp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 12px 22px; border-radius: 12px; text-decoration: none; font-weight: 600; margin-top: 12px; font-size: 14px; box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4); transition: 0.3s; }
-        .whatsapp-btn:hover { transform: translateY(-2px); }
-        .whatsapp-icon { width: 22px; height: 22px; vertical-align: middle; }
-        
-        .form-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); padding: 20px; border-radius: 18px; margin-bottom: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-        .form-card label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 6px; font-weight: 500; }
-        .form-card input { width: 100%; padding: 12px 14px; margin-bottom: 16px; background: #0b0f19; border: 1px solid #475569; color: white; border-radius: 12px; font-size: 15px; outline: none; transition: 0.3s; }
-        .form-card input:focus { border-color: #facc15; box-shadow: 0 0 8px rgba(250, 204, 21, 0.3); }
-        
-        /* चेकबॉक्स डिजाइन */
-        .checkbox-group { display: flex; gap: 20px; margin-bottom: 16px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155; }
-        .checkbox-group label { display: flex; align-items: center; gap: 8px; color: #cbd5e1; font-size: 12px; cursor: pointer; margin-bottom: 0; }
-        .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #facc15; margin-bottom: 0; cursor: pointer; }
+import random
+import sys
 
-        .btn-add { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px; box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3); }
-
-        .section-title { font-size: 15px; color: #facc15; margin-bottom: 12px; font-weight: 600; border-bottom: 1px solid #334155; padding-bottom: 6px; }
-        
-        .request-card { background: rgba(30, 41, 59, 0.8); padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid #334155; position: relative; }
-        .request-card p { margin: 4px 0; font-size: 13px; color: #cbd5e1; }
-        .request-card strong { color: #facc15; }
-        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; margin-top: 4px; }
-        .status-verified { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
-        .status-received { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
-
-        .btn-delete { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 11px; position: absolute; top: 16px; right: 16px; }
-        
-        .no-request { text-align: center; color: #64748b; margin-top: 30px; font-size: 13px; }
-
-        /* नीचे वाला नेविगेशन बार */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.6); }
-        .nav-item { background: none; border: none; color: #94a3b8; font-family: 'Poppins', sans-serif; font-size: 12px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item.active { color: #facc15; font-weight: 600; }
-        .nav-item span { font-size: 18px; }
-
-        /* रॉयल भाषा चयन फुल-स्क्रीन पॉपअप */
-        .lang-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 11, 0.92); backdrop-filter: blur(15px); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
-        .lang-content { background: linear-gradient(145deg, #1e293b, #0f172a); padding: 35px 25px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 20px rgba(250, 204, 21, 0.1); }
-        
-        .royal-badge { background: rgba(250, 204, 21, 0.15); color: #facc15; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; padding: 6px 14px; border-radius: 20px; display: inline-block; margin-bottom: 15px; border: 1px solid rgba(250, 204, 21, 0.3); font-weight: 600; }
-        
-        .royal-lang-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none; padding: 16px 20px; width: 100%; border-radius: 14px; margin-top: 14px; font-weight: 600; font-size: 16px; cursor: pointer; font-family: 'Poppins', sans-serif; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .royal-lang-btn.secondary { background: linear-gradient(135deg, #334155, #1e293b); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc; }
-    </style>
-</head>
-<body>
-
-    <!-- रॉयल फर्स्ट-टाइम भाषा चयन स्क्रीन -->
-    <div class="lang-modal" id="firstLangModal">
-        <div class="lang-content">
-            <div class="royal-badge">✨ Royal Selection ✨</div>
-            <h2 style="margin:0 0 8px 0; color: #facc15; font-size: 24px; font-weight: 700;">Master Ludo</h2>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">कृपया अपनी पसंदीदा भाषा चुनें<br>Please choose your preferred language</p>
-            
-            <button class="royal-lang-btn" onclick="selectFirstLanguage('hi')">
-                <span>🇮🇳</span> हिंदी में जारी रखें
-            </button>
-            <button class="royal-lang-btn secondary" onclick="selectFirstLanguage('en')">
-                <span>🇬🇧</span> Continue in English
-            </button>
-        </div>
-    </div>
-
-    <!-- मुख्य एडमिन पैनल -->
-    <div class="admin-container">
-        <div class="header">
-            <h2 id="txtHeader">🛡️ Armaan Admin Panel</h2>
-            <p id="txtSubHeader">Master Ludo Payment & Balance Manager</p>
-        </div>
-
-        <!-- व्हाट्सएप नोटिस (WhatsApp का असली आइकॉन और छुपा हुआ नंबर) -->
-        <div class="whatsapp-notice">
-            <span id="txtNotice">📢 <strong>निर्देश:</strong> स्कैनर पर पेमेंट करने के बाद स्क्रीनशॉट को WhatsApp पर भेजें।</span><br>
-            <a href="https://wa.me/917763942006?text=Hello%20Armaan,%20I%20have%20made%20the%20payment%20on%20your%20scanner%20for%20Master%20Ludo." class="whatsapp-btn" target="_blank" id="txtWaBtn">
-                <svg class="whatsapp-icon" viewBox="0 0 32 32" fill="currentColor"><path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.6 2.137 8.037l-2.137 7.963 7.937-2.175c2.375 1.325 5.125 2.037 7.963 2.037 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.338c-2.438 0-4.812-0.65-6.887-1.888l-0.5-0.3-5.175 1.413 1.388-5.038-0.325-0.513c-1.313-2.075-2-4.513-2-7.013 0-7.35 5.987-13.338 13.338-13.338s13.338 5.987 13.338 13.338-5.988 13.338-13.338 13.338zM22.863 19.338c-0.363-0.188-2.15-1.063-2.488-1.188s-0.575-0.188-0.813 0.188-0.938 1.188-1.15 1.438c-0.213 0.25-0.425 0.288-0.788 0.1s-1.538-0.563-2.925-1.813c-1.088-0.975-1.813-2.175-2.025-2.538s-0.025-0.563 0.163-0.75c0.163-0.163 0.363-0.425 0.55-0.638s0.25-0.338 0.375-0.563c0.125-0.225 0.063-0.425-0.038-0.625s-0.813-1.95-1.113-2.663c-0.288-0.7-0.587-0.6-0.8-0.613l-0.688-0.013c-0.238 0-0.625 0.088-0.95 0.438s-1.25 1.213-1.25 2.963 1.275 3.438 1.45 3.675c0.175 0.238 2.5 3.813 6.063 5.35 0.85 0.363 1.513 0.575 2.025 0.738 0.85 0.275 1.625 0.238 2.238 0.15 0.688-0.1 2.15-0.875 2.45-1.725s0.3-1.575 0.213-1.725c-0.088-0.15-0.325-0.238-0.688-0.425z"/></path></svg>
-                <span id="txtWaBtnText">WhatsApp पर चैट करें</span>
-            </a>
-        </div>
-
-        <!-- फॉर्म और चेकबॉक्स -->
-        <div class="form-card">
-            <label id="txtMobLabel">📱 यूजर का मोबाइल नंबर लिखें:</label>
-            <input type="number" id="userMobile" placeholder="उदा: 9876543210">
-
-            <label id="txtAmtLabel">💰 स्कैनर पर भेजा गया अमाउंट लिखें (₹):</label>
-            <input type="number" id="userAmount" placeholder="उदा: 100 या 50">
-
-            <!-- दो चेकबॉक्स विकल्प -->
-            <label id="txtCheckLabel" style="margin-bottom: 8px;">☑️ पेमेंट और अप्रूवल स्टेटस:</label>
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="checkReceived" checked> <span id="txtChk1">Payment Received</span>
-                </label>
-                <label>
-                    <input type="checkbox" id="checkVerified" checked> <span id="txtChk2">Admin Verified</span>
-                </label>
-            </div>
-
-            <button class="btn-add" onclick="addBalance()" id="txtBtnAdd">✅ Approve & Add Balance</button>
-        </div>
-
-        <div class="section-title" id="txtListTitle">📊 Scanner Approved Users List</div>
-        <div id="requestsList">
-            <div class="no-request" id="txtNoReq">अभी कोई नया रिकॉर्ड नहीं है। ऊपर फॉर्म से जोड़ें।</div>
-        </div>
-    </div>
-
-    <!-- नीचे वाला नेविगेशन बार -->
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home')">
-            <span>🏠</span>
-            <span id="navHome">Home</span>
-        </button>
-        <button class="nav-item" onclick="openLangModalAgain()">
-            <span>🌐</span>
-            <span id="navLang">Language</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('account')">
-            <span>👤</span>
-            <span id="navAcc">Account</span>
-        </button>
-    </div>
-
-    <!-- भाषा बदलने के लिए पॉपअप -->
-    <div class="lang-modal" id="settingsLangModal" style="display: none;">
-        <div class="lang-content">
-            <div class="royal-badge">✨ Settings ✨</div>
-            <h3 style="margin:0 0 20px 0; color: #facc15; font-size: 20px;">Select Language / भाषा चुनें</h3>
-            
-            <button class="royal-lang-btn" onclick="selectFirstLanguage('hi')">
-                <span>🇮🇳</span> हिंदी (Hindi)
-            </button>
-            <button class="royal-lang-btn secondary" onclick="selectFirstLanguage('en')" style="margin-top: 12px;">
-                <span>🇬🇧</span> English
-            </button>
-        </div>
-    </div>
-
-    <script>
-        const langData = {
-            hi: {
-                header: "🛡️ अरमान एडमिन पैनल",
-                subHeader: "मास्टर लूडो पेमेंट और बैलेंस मैनेजर",
-                notice: "📢 <strong>निर्देश:</strong> स्कैनर पर पेमेंट करने के बाद स्क्रीनशॉट को WhatsApp पर भेजें।",
-                waBtnText: "WhatsApp पर चैट करें",
-                mobLabel: "📱 यूजर का मोबाइल नंबर लिखें:",
-                amtLabel: "💰 स्कैनर पर भेजा गया अमाउंट लिखें (₹):",
-                checkLabel: "☑️ पेमेंट और अप्रूवल स्टेटस:",
-                chk1: "पेमेंट प्राप्त हुआ",
-                chk2: "एडमिन द्वारा सत्यापित",
-                btnAdd: "✅ अप्रूव करें और बैलेंस जोड़ें",
-                listTitle: "📊 स्कैनर अप्रूव्ड यूजर सूची",
-                noReq: "अभी कोई नया रिकॉर्ड नहीं है। ऊपर फॉर्म से जोड़ें।",
-                navHome: "होम",
-                navLang: "भाषा",
-                navAcc: "अकाउंट",
-                alertFill: "कृपया मोबाइल नंबर और अमाउंट दोनों सही से भरें!",
-                alertSuccess: "सफलतापूर्वक बैलेंस जोड़ दिया गया है!"
-            },
-            en: {
-                header: "🛡️ Armaan Admin Panel",
-                subHeader: "Master Ludo Payment & Balance Manager",
-                notice: "📢 <strong>Instruction:</strong> After payment on scanner, send the screenshot on WhatsApp.",
-                waBtnText: "Chat on WhatsApp",
-                mobLabel: "📱 Enter User Mobile Number:",
-                amtLabel: "💰 Enter Scanner Sent Amount (₹):",
-                checkLabel: "☑️ Payment & Approval Status:",
-                chk1: "Payment Received",
-                chk2: "Admin Verified",
-                btnAdd: "✅ Approve & Add Balance",
-                listTitle: "📊 Scanner Approved Users List",
-                noReq: "No new records yet. Add from above form.",
-                navHome: "Home",
-                navLang: "Language",
-                navAcc: "Account",
-                alertFill: "Please fill both mobile number and amount correctly!",
-                alertSuccess: "Balance added successfully!"
-            }
-        };
-
-        window.onload = function() {
-            let savedLang = localStorage.getItem('app_lang');
-            if(savedLang) {
-                document.getElementById('firstLangModal').style.display = 'none';
-                setLanguage(savedLang);
-            } else {
-                document.getElementById('firstLangModal').style.display = 'flex';
-            }
-            renderList();
-        };
-
-        function selectFirstLanguage(lang) {
-            localStorage.setItem('app_lang', lang);
-            document.getElementById('firstLangModal').style.display = 'none';
-            document.getElementById('settingsLangModal').style.display = 'none';
-            setLanguage(lang);
+class LudoGame:
+    def __init__(self, players):
+        self.players = players # List of player names
+        self.board_size = 52   # Main track spaces
+        # Har player ke tokens ki current positions (-1 matlab home/base par hain)
+        self.tokens = {player: [ -1, -1, -1, -1 ] for player in players}
+        # Safe zones ya starting positions
+        self.start_positions = {
+            self.players[0]: 0,
+            self.players[1]: 13,
+            self.players[2]: 26,
+            self.players[3]: 39 if len(self.players) > 3 else 0
         }
+        
+    def roll_dice(self):
+        return random.randint(1, 6)
 
-        function openLangModalAgain() {
-            document.getElementById('settingsLangModal').style.display = 'flex';
-        }
+    def display_status(self):
+        print("\n" + "="*40)
+        print("CURRENT TOKEN POSITIONS:")
+        for player, positions in self.tokens.items():
+            print(f"{player}: {positions}")
+        print("="*40 + "\n")
 
-        function setLanguage(lang) {
-            let t = langData[lang];
-            document.getElementById('txtHeader').innerText = t.header;
-            document.getElementById('txtSubHeader').innerText = t.subHeader;
-            document.getElementById('txtNotice').innerHTML = t.notice;
-            document.getElementById('txtWaBtnText').innerText = t.waBtnText;
-            document.getElementById('txtMobLabel').innerText = t.mobLabel;
-            document.getElementById('txtAmtLabel').innerText = t.amtLabel;
-            document.getElementById('txtCheckLabel').innerText = t.checkLabel;
-            document.getElementById('txtChk1').innerText = t.chk1;
-            document.getElementById('txtChk2').innerText = t.chk2;
-            document.getElementById('txtBtnAdd').innerText = t.btnAdd;
-            document.getElementById('txtListTitle').innerText = t.listTitle;
-            document.getElementById('navHome').innerText = t.navHome;
-            document.getElementById('navLang').innerText = t.navLang;
-            document.getElementById('navAcc').innerText = t.navAcc;
-        }
+    def play(self):
+        print("Ludo Game Start Ho Chuka Hai!")
+        print(f"Players: {', '.join(self.players)}")
+        
+        while True:
+            for player in self.players:
+                self.display_status()
+                input(f"{player} ki baari hai. Dice roll karne ke liye Enter dabayein...")
+                dice = self.roll_dice()
+                print(f"🎲 {player} ne roll kiya aur aaya: {dice}")
+                
+                # Check agar sabhi tokens base par hain aur 6 nahi aaya
+                all_at_home = all(pos == -1 for pos in self.tokens[player])
+                if all_at_home and dice != 6:
+                    print(f"Aapke sabhi tokens ghar me hain aur 6 nahi aaya. Baari agle player ko milti hai.\n")
+                    continue
+                
+                # Token select karne ke liye input lein
+                valid_tokens = []
+                for i, pos in enumerate(self.tokens[player]):
+                    if pos == -1 and dice == 6:
+                        valid_tokens.append(i)
+                    elif pos != -1 and pos != 99: # 99 matlab win ho chuka token
+                        valid_tokens.append(i)
+                
+                if not valid_tokens:
+                    print(f"Chalane ke liye koi valid token nahi hai.\n")
+                    continue
+                
+                print(f"Aapke valid tokens index: {valid_tokens}")
+                token_idx = -1
+                while token_idx not in valid_tokens:
+                    try:
+                        token_idx = int(input(f"Kaun sa token chalana hai ({'/'.join(map(str, valid_tokens))}): "))
+                    except ValueError:
+                        print("Kripya sahi number dalein.")
 
-        function switchTab(tab) {
-            let currentLang = localStorage.getItem('app_lang') || 'hi';
-            if(tab === 'account') {
-                let msg = currentLang === 'hi' ? "यह एडमिन पैनल अकाउंट है। यहाँ से आप स्कैनर पेमेंट मैनेज करते हैं।" : "This is Admin Account panel. You manage scanner payments from here.";
-                alert(msg);
-            }
-        }
+                # Move logic
+                current_pos = self.tokens[player][token_idx]
+                
+                if current_pos == -1 and dice == 6:
+                    # Token ko bahar nikalna (Home se start position par)
+                    start_pos = self.start_positions[player]
+                    self.tokens[player][token_idx] = start_pos
+                    print(f"{player} ka token 1 board par aa gaya!")
+                else:
+                    # Normal move on board
+                    new_pos = current_pos + dice
+                    if new_pos >= self.board_size:
+                        new_pos = new_pos % self.board_size # Loop around board
+                    
+                    # Check for cutting opponent tokens
+                    self.check_collision(player, new_pos)
+                    
+                    self.tokens[player][token_idx] = new_pos
+                    print(f"{player} ka token position {new_pos} par pahunch gaya.")
 
-        function addBalance() {
-            const mobile = document.getElementById('userMobile').value.trim();
-            const amount = document.getElementById('userAmount').value.trim();
-            const isReceived = document.getElementById('checkReceived').checked;
-            const isVerified = document.getElementById('checkVerified').checked;
-            
-            let currentLang = localStorage.getItem('app_lang') || 'hi';
-            let t = langData[currentLang];
+                # Check for win condition
+                if all(pos == 99 for pos in self.tokens[player]):
+                    print(f"\n🎉 Badhaai ho! {player} ne Ludo game jeet liya hai! 🎉")
+                    sys.exit()
 
-            if(mobile === "" || amount === "") {
-                alert(t.alertFill);
-                return;
-            }
+                print("-" * 30)
 
-            let list = JSON.parse(localStorage.getItem('admin_approvals')) || [];
-            list.unshift({ 
-                mobile: mobile, 
-                amount: amount, 
-                received: isReceived, 
-                verified: isVerified, 
-                time: new Date().toLocaleTimeString() 
-            });
-            localStorage.setItem('admin_approvals', JSON.stringify(list));
+    def check_collision(self, current_player, target_pos):
+        # Dusre players ke tokens ko check karna agar us pos par hain toh unhe wapas ghar (-1) bhej dena
+        for player, positions in self.tokens.items():
+            if player == current_player:
+                continue
+            for i, pos in enumerate(positions):
+                if pos == target_pos:
+                    self.tokens[player][i] = -1
+                    print(f"⚡ {current_player} ne {player} ke token ko kaat diya! Woh wapas ghar chala gaya.")
 
-            document.getElementById('userMobile').value = '';
-            document.getElementById('userAmount').value = '';
-
-            renderList();
-            alert(t.alertSuccess);
-        }
-
-        function renderList() {
-            const listContainer = document.getElementById('requestsList');
-            let list = JSON.parse(localStorage.getItem('admin_approvals')) || [];
-            let currentLang = localStorage.getItem('app_lang') || 'hi';
-            let t = langData[currentLang];
-
-            if(list.length === 0) {
-                listContainer.innerHTML = `<div class="no-request">${t.noReq}</div>`;
-                return;
-            }
-
-            let html = '';
-            list.forEach((item, index) => {
-                let badges = '';
-                if(item.received) badges += `<span class="status-badge status-received">${currentLang === 'hi' ? 'पेमेंट प्राप्त' : 'Received'}</span> `;
-                if(item.verified) badges += `<span class="status-badge status-verified">${currentLang === 'hi' ? 'सत्यापित' : 'Verified'}</span>`;
-
-                html += `
-                    <div class="request-card">
-                        <p>📱 Mobile: <strong>${item.mobile}</strong></p>
-                        <p>💰 Scanner Amount: <strong style="color: #4ade80;">₹${item.amount}</strong></p>
-                        <div>${badges}</div>
-                        <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Time: ${item.time}</p>
-                        <button class="btn-delete" onclick="deleteItem(${index})">Delete</button>
-                    </div>
-                `;
-            });
-            listContainer.innerHTML = html;
-        }
-
-        function deleteItem(index) {
-            let list = JSON.parse(localStorage.getItem('admin_approvals')) || [];
-            list.splice(index, 1);
-            localStorage.setItem('admin_approvals', JSON.stringify(list));
-            renderList();
-        }
-    </script>
-
-</body>
-</html>
+if __name__ == "__main__":
+    # Game setup (2 to 4 players)
+    p_list = ["Player 1", "Player 2", "Player 3", "Player 4"]
+    game = LudoGame(p_list)
+    game.play()
